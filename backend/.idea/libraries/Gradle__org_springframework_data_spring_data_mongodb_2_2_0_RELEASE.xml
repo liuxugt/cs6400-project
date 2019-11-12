@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework.data:spring-data-mongodb:2.2.0.RELEASE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-mongodb/2.2.0.RELEASE/645353d929e831aee61286e01eb11b96797a4cc3/spring-data-mongodb-2.2.0.RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-mongodb/2.2.0.RELEASE/82fadf87270ddee9c613cd689d8108cfebddc518/spring-data-mongodb-2.2.0.RELEASE-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
