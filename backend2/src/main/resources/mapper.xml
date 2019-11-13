@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cs6400.database.Mapper">
+    <resultMap id="movieMap" type="Movie" autoMapping="true"/>
+    <resultMap id="companyMap" type="Company" autoMapping="true" />
+
+    <select id="getAllMovies" resultMap="movieMap">
+        select id, title, vote_average, vote_count from movies LIMIT 10;
+    </select>
+
+    <select id="getMovieById" resultMap="movieMap">
+        SELECT id, title, vote_average, vote_count FROM movies WHERE id=#{id};
+    </select>
+
+    <select id="getMovieByTitle" resultMap="movieMap">
+        SELECT id, title, vote_average, vote_count FROM movies WHERE title=#{title};
+    </select>
+</mapper>
