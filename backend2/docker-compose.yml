@@ -1,0 +1,40 @@
+mysql_server:
+  container_name: cs6400_project_database
+  image: mysql:8.0
+  ports:
+    - "3308:3306"
+  environment:
+    - MYSQL_ROOT_PASSWORD=Xiaoxu433lx!
+    - MYSQL_DATABASE=cs6400
+    - MYSQL_USER=XuLiu
+    - MYSQL_PASSWORD=
+
+#dev:
+#  container_name: cs6400_project_dev
+#  ports:
+#    - "8008:8808"
+#    - "8080:8080"
+#  links:
+#    - mysql_server:db
+#  environment:
+#    - DB_HOST=mysql_server
+#  volumes:
+#    - .:/code
+#  working_dir: /code
+#  build: .
+#  command: "./gradlew build && java -jar ./build/libs/backend-0.0.1-SNAPSHOT.jar"
+
+#dev:
+#  container_name: cs6400_project_dev
+#  restart: always
+#  build: .
+#  ports:
+#    - "8808:8808"
+#    - "8080:8080"
+#  links:
+#    - mysql_server:db
+#  environment:
+#    - DB_HOST=mysql_server
+#  volumes:
+#    - .:/code
+#  working_dir: /code
