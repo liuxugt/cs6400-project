@@ -28,7 +28,7 @@
         JOIN countries AS coun ON coun.iso_3166_1 = mcr.country_id
         JOIN movie_language_relation AS mlr ON mlr.movie_id = m.id
         JOIN languages AS l ON l.iso_639_1 = mlr.language_id
-        WHERE m.id = #{title}
+        WHERE m.title = #{title}
     </select>
     <select id="getCompaniesRelatedToMovie" resultMap="companyMovieMap">
         SELECT c.name, SUM(m2.revenue) AS revenue FROM movies AS m
@@ -36,7 +36,7 @@
         JOIN companies AS c ON c.id = cmr.company_id
         JOIN movie_company_relation AS cmr2 ON cmr2.company_id = c.id
         JOIN movies AS m2 ON m2.id = cmr2.movie_id
-        where m.id = #{title}
+        where m.title = #{title}
         group by c.name
     </select>
 

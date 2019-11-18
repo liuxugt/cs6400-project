@@ -27,7 +27,7 @@ public class BackendServices {
         return dataManager.getAllMovies();
     }
 
-    public MovieResponse getMovieByTitle(int title) {
+    public MovieResponse getMovieByTitle(String title) {
 
         System.out.println(title + " in service");
         Movie basic_info = dataManager.getMovieByTitle(title);

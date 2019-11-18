@@ -36,7 +36,7 @@ public class DataManager {
         }
     }
 
-    public Movie getMovieByTitle(int title){
+    public Movie getMovieByTitle(String title){
         SqlSession sqlSession = factory.openSession();
         try{
             Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -46,7 +46,7 @@ public class DataManager {
         }
     }
 
-    public List<CompanyMovieRelated> getCompaniesByMovieTitle(int title){
+    public List<CompanyMovieRelated> getCompaniesByMovieTitle(String title){
         SqlSession sqlSession = factory.openSession();
         try{
             Mapper mapper = sqlSession.getMapper(Mapper.class);

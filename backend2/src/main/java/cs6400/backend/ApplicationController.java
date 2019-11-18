@@ -47,7 +47,7 @@ public class ApplicationController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/movies/title/{movie_title}")
-    public ResponseEntity<?> getMovieByTitle(@PathVariable int movie_title){
+    public ResponseEntity<?> getMovieByTitle(@PathVariable String movie_title){
         System.out.println(movie_title);
         MovieResponse res = this.repository.getMovieByTitle(movie_title);
         System.out.println(res);
