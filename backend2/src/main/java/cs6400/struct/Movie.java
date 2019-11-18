@@ -1,17 +1,14 @@
 package cs6400.struct;
 
 public class Movie {
-    private int id;
+    int id;
     private String title;
-    private double vote_average;
-    private int vote_count;
-
-    public Movie(int id, String title, double vote_average, int vote_count) {
-        this.id = id;
-        this.title = title;
-        this.vote_average = vote_average;
-        this.vote_count = vote_count;
-    }
+    private String language;
+    private double voting_average;
+    private String country;
+    private String collection_name;
+    private String release_date;
+    private String status;
 
     public int getId() {
         return id;
@@ -29,19 +26,65 @@ public class Movie {
         this.title = title;
     }
 
-    public double getVote_average() {
-        return vote_average;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setVote_average(double vote_average) {
-        this.vote_average = vote_average;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
-    public int getVote_count() {
-        return vote_count;
+    public double getVoting_average() {
+        return voting_average;
     }
 
-    public void setVote_count(int vote_count) {
-        this.vote_count = vote_count;
+    public void setVoting_average(double voting_average) {
+        this.voting_average = voting_average;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCollection_name() {
+        return collection_name;
+    }
+
+    public void setCollection_name(String collection_name) {
+        this.collection_name = collection_name;
+    }
+
+    public String getRelease_date() {
+        return release_date;
+    }
+
+    public void setRelease_date(String release_date) {
+        this.release_date = release_date;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Movie() {
+    }
+
+    public Movie(int id,String title, String language, double voting_average, String country, String collection_name, String release_date, String status) {
+        this.id = id;
+        this.title = title;
+        this.language = language;
+        this.voting_average = voting_average;
+        this.country = country;
+        this.collection_name = collection_name;
+        this.release_date = release_date;
+        this.status = status;
     }
 }

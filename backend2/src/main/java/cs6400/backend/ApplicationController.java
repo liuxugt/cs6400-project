@@ -1,6 +1,7 @@
 package cs6400.backend;
 
 import cs6400.struct.Movie;
+import cs6400.struct.MovieResponse;
 import org.apache.ibatis.mapping.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,17 @@ public class ApplicationController {
     public ResponseEntity<?> getAllMovies(){
         List<Movie> movies = this.repository.getAllMovies();
         return new ResponseEntity<>(movies, HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/api/movies/title/{movie_title}")
+    public ResponseEntity<?> getMovieByTitle(@PathVariable int movie_title){
+        System.out.println(movie_title);
+        MovieResponse res = this.repository.getMovieByTitle(movie_title);
+        System.out.println(res);
+        if (res == null) {
+            return new ResponseEntity<>("404 error: Movie Not Found", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 
 }

@@ -3,8 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cs6400.database.Mapper">
-    <resultMap id="movieMap" type="Movie" autoMapping="true"/>
-    <resultMap id="companyMap" type="Company" autoMapping="true" />
+    <resultMap id="movieMap" type="movie" autoMapping="true"/>
+    <resultMap id="companyMap" type="company" autoMapping="true" />
+    <resultMap id="crewMovieMap" type="crew_movie" autoMapping="true"/>
+    <resultMap id="castMovieMap" type="cast_movie" autoMapping="true"/>
+    <resultMap id="movieMovieMap" type="movie_movie" autoMapping="true" />
+    <resultMap id="companyMovieMap" type="company_movie" autoMapping="true"/>
+    <resultMap id="genreMovieMap" type="genre_movie" autoMapping="true" />
+    
 
     <select id="getAllMovies" resultMap="movieMap">
         select id, title, vote_average, vote_count from movies LIMIT 10;
@@ -15,6 +21,27 @@
     </select>
 
     <select id="getMovieByTitle" resultMap="movieMap">
-        SELECT id, title, vote_average, vote_count FROM movies WHERE title=#{title};
+        SELECT m.id, m.title, l.name AS language, m.vote_average, coun.name AS country, coll.name AS collection_name, m.release_date, m.status
+        FROM movies AS m
+        JOIN collections AS coll ON m.belongs_to_collection_id = coll.id
+        JOIN movie_country_relation AS mcr ON mcr.movie_id = m.id
+        JOIN countries AS coun ON coun.iso_3166_1 = mcr.country_id
+        JOIN movie_language_relation AS mlr ON mlr.movie_id = m.id
+        JOIN languages AS l ON l.iso_639_1 = mlr.language_id
+        WHERE m.id = #{title}
     </select>
+    <select id="getCompaniesRelatedToMovie" resultMap="companyMovieMap">
+        SELECT c.name, SUM(m2.revenue) AS revenue FROM movies AS m
+        JOIN movie_company_relation AS cmr ON cmr.movie_id = m.id
+        JOIN companies AS c ON c.id = cmr.company_id
+        JOIN movie_company_relation AS cmr2 ON cmr2.company_id = c.id
+        JOIN movies AS m2 ON m2.id = cmr2.movie_id
+        where m.id = #{title}
+        group by c.name
+    </select>
+
+    <!--<select id="getCastRelatedToMovieSortByMovieCount" resultMap="genreMovieMap">-->
+        <!--SELECT name FROM movies as-->
+    <!--</select>-->
+
 </mapper>

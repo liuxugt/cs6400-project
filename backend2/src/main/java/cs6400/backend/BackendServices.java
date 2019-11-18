@@ -27,4 +27,25 @@ public class BackendServices {
         return dataManager.getAllMovies();
     }
 
+    public MovieResponse getMovieByTitle(int title) {
+
+        System.out.println(title + " in service");
+        Movie basic_info = dataManager.getMovieByTitle(title);
+        if(basic_info == null){
+            return null;
+        }
+
+        System.out.println(title + " pass null checking");
+        MovieResponse response = new MovieResponse(basic_info);
+        List<CompanyMovieRelated> companies = dataManager.getCompaniesByMovieTitle(title);
+        response.setCompanies(companies);
+        System.out.println(title + " get companies");
+        System.out.println(companies);
+        System.out.println(response);
+//        if(!basic_info.getStatus().equals("Released")){
+//            return response;
+//        }
+        return response;
+    }
+
 }

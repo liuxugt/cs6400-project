@@ -21,4 +21,9 @@ public class BackendRepo {
     public List<Movie> getAllMovies(){
         return services.getAllMovies();
     }
+
+    public MovieResponse getMovieByTitle(int title){
+        System.out.println(title + " in repo");
+        return services.getMovieByTitle(title);
+    }
 }

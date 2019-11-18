@@ -36,4 +36,24 @@ public class DataManager {
         }
     }
 
+    public Movie getMovieByTitle(int title){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getMovieByTitle(title);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    public List<CompanyMovieRelated> getCompaniesByMovieTitle(int title){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getCompaniesRelatedToMovie(title);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
 }
