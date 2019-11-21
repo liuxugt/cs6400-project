@@ -23,7 +23,7 @@
     <select id="getMovieByTitle" resultMap="movieMap">
         SELECT m.id, m.title, l.name AS language, m.vote_average, coun.name AS country, coll.name AS collection_name, m.release_date, m.status
         FROM movies AS m
-        JOIN collections AS coll ON m.belongs_to_collection_id = coll.id
+        LEFT OUTER JOIN collections AS coll ON m.belongs_to_collection_id = coll.id
         JOIN movie_country_relation AS mcr ON mcr.movie_id = m.id
         JOIN countries AS coun ON coun.iso_3166_1 = mcr.country_id
         JOIN movie_language_relation AS mlr ON mlr.movie_id = m.id

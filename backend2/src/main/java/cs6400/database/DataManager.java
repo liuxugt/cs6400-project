@@ -40,6 +40,7 @@ public class DataManager {
         SqlSession sqlSession = factory.openSession();
         try{
             Mapper mapper = sqlSession.getMapper(Mapper.class);
+            System.out.println(title);
             return mapper.getMovieByTitle(title);
         } finally {
             sqlSession.close();

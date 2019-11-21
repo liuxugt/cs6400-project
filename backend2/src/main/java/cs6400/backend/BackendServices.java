@@ -27,7 +27,7 @@ public class BackendServices {
         return dataManager.getAllMovies();
     }
 
-    public MovieResponse getMovieByTitle(String title) {
+    public MovieResponse getMovieResponseByTitle(String title) {
 
         System.out.println(title + " in service");
         Movie basic_info = dataManager.getMovieByTitle(title);
@@ -46,6 +46,10 @@ public class BackendServices {
 //            return response;
 //        }
         return response;
+    }
+
+    public Movie getTestMovie(){
+        return dataManager.getMovieByTitle("Moana");
     }
 
 }

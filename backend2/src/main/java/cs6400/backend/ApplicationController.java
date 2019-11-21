@@ -49,7 +49,7 @@ public class ApplicationController {
     @RequestMapping(method = RequestMethod.GET, value = "/api/movies/title/{movie_title}")
     public ResponseEntity<?> getMovieByTitle(@PathVariable String movie_title){
         System.out.println(movie_title);
-        MovieResponse res = this.repository.getMovieByTitle(movie_title);
+        MovieResponse res = this.repository.getMovieResponseByTitle(movie_title);
         System.out.println(res);
         if (res == null) {
             return new ResponseEntity<>("404 error: Movie Not Found", HttpStatus.NOT_FOUND);
@@ -57,4 +57,10 @@ public class ApplicationController {
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/api/test")
+    public ResponseEntity<?> testAPI(){
+        Movie movies = this.repository.getTestMovie();
+        System.out.println(movies);
+        return new ResponseEntity<>(movies, HttpStatus.ACCEPTED);
+    }
 }
