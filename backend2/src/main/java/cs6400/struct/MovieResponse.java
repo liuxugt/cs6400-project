@@ -21,7 +21,6 @@ public class MovieResponse {
     public int getMovieSize(){
         return movies.size();
     }
-
     public int getCompanySize(){
         return companies.size();
     }
@@ -144,5 +143,10 @@ public class MovieResponse {
     }
 
     public MovieResponse() {
+        crews = new ArrayList<>();
+        companies = new ArrayList<>();
+        genres = new ArrayList<>();
+        movies = new ArrayList<>();
+        casts = new ArrayList<>();
     }
 }

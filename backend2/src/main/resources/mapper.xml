@@ -10,7 +10,11 @@
     <resultMap id="movieMovieMap" type="movie_movie" autoMapping="true" />
     <resultMap id="companyMovieMap" type="company_movie" autoMapping="true"/>
     <resultMap id="genreMovieMap" type="genre_movie" autoMapping="true" />
-    
+    <resultMap id="movieCompanyMap" type="movie_company" autoMapping="true"/>
+    <resultMap id="crewCompanyMap" type="crew_company" autoMapping="true" />
+    <resultMap id="castCompanyMap" type="cast_company" autoMapping="true" />
+    <resultMap id="companyCompanyMap" type="company_company" autoMapping="true" />
+    <resultMap id="genreCompanyMap" type="genre_company" autoMapping="true" />
 
     <select id="getAllMovies" resultMap="movieMap">
         select id, title, vote_average, vote_count from movies LIMIT 10;
@@ -36,9 +40,32 @@
         JOIN companies AS c ON c.id = cmr.company_id
         JOIN movie_company_relation AS cmr2 ON cmr2.company_id = c.id
         JOIN movies AS m2 ON m2.id = cmr2.movie_id
-        where m.title = #{title}
+        where m.id = #{id}
         group by c.name
     </select>
+    <select id="getCrewsRelatedToMovie" resultMap="crewMovieMap">
+        SELECT c.id, c.name, c.gender, mcr.department, mcr.job FROM crews AS c
+        JOIN movie_crew_relation AS mcr ON mcr.crew_id = c.id
+        where mcr.movie_id = #{id} and mcr.department = #{department}
+    </select>
+    <select id="getCastRelatedToMovie" resultMap="crewMovieMap">
+        SELECT c.id, c.name, c.gender, mcr.character FROM crews AS c
+        JOIN movie_cast_relation as mcr ON mcr.cast_id = c.id
+        where mcr.movie_id = #{id}
+        limit 10
+    </select>
+
+    <select id="getGenreRelatedToMovie" resultMap="genreMovieMap">
+        SELECT g.id, g.name, AVG(vote_average) AS voting_average FROM genres AS g
+        JOIN movie_genre_relation as mgr ON mgr.genre_id = g.id
+        JOIN movie_genre_relation as mgr2 ON mgr2.genre_id = g.id
+        JOIN movies as m ON mgr2.movie_id = m.id
+        where mgr.movie_id = #{id}
+        order by AVG(vote_average) DESC
+        group by g.id, g.name
+    </select>
+
+    <select id="get"
 
     <!--<select id="getCastRelatedToMovieSortByMovieCount" resultMap="genreMovieMap">-->
         <!--SELECT name FROM movies as-->

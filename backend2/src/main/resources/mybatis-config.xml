@@ -22,19 +22,22 @@
     <typeAliases>
         <typeAlias type="cs6400.struct.Movie" alias="movie"/>
         <typeAlias type="cs6400.struct.Company" alias="company"/>
-        <typeAlias type="cs6400.struct.People" alias="people"/>
         <typeAlias type="cs6400.struct.CrewMovieRelated" alias="crew_movie"/>
         <typeAlias type="cs6400.struct.GenreMovieRelated" alias="genre_movie"/>
         <typeAlias type="cs6400.struct.MovieMovieRelated" alias="movie_movie"/>
         <typeAlias type="cs6400.struct.CastMovieRelated" alias="cast_movie"/>
         <typeAlias type="cs6400.struct.CompanyMovieRelated" alias="company_movie"/>
-
+        <typeAlias type="cs6400.struct.CrewCompanyRelated" alias="crew_company"/>
+        <typeAlias type="cs6400.struct.GenreCompanyRelated" alias="genre_company"/>
+        <typeAlias type="cs6400.struct.MovieCompanyRelated" alias="movie_company" />
+        <typeAlias type="cs6400.struct.CastCompanyRelated" alias="cast_company" />
+        <typeAlias type="cs6400.struct.CompanyCompanyRelated" alias="company_company"/>
     </typeAliases>
 
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
-            <dataSource type="POOLED">
+         ,   <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver" />
                 <property name="url" value="jdbc:mysql://localhost:3308/cs6400" />
                 <property name="username" value="root"/>
