@@ -16,6 +16,7 @@
     <resultMap id="companyCompanyMap" type="company_company" autoMapping="true" />
     <resultMap id="genreCompanyMap" type="genre_company" autoMapping="true" />
 
+    <!--start the queries on movies-->
     <select id="getAllMovies" resultMap="movieMap">
         select id, title, vote_average, vote_count from movies LIMIT 10;
     </select>
@@ -56,19 +57,117 @@
     </select>
 
     <select id="getGenreRelatedToMovie" resultMap="genreMovieMap">
-        SELECT g.id, g.name, AVG(vote_average) AS voting_average FROM genres AS g
+        SELECT g.id, g.name, AVG(vote_average) AS average_rating FROM genres AS g
         JOIN movie_genre_relation as mgr ON mgr.genre_id = g.id
         JOIN movie_genre_relation as mgr2 ON mgr2.genre_id = g.id
         JOIN movies as m ON mgr2.movie_id = m.id
-        where mgr.movie_id = #{id}
-        order by AVG(vote_average) DESC
-        group by g.id, g.name
+        WHERE mgr.movie_id = #{id}
+        ORDER by AVG(vote_average) DESC
+        GROUP by g.id, g.name
     </select>
 
-    <select id="get"
+    <select id="getSimilarMovie" resultMap="movieMovieMap">
+        SELECT * FROM movies;
+    </select>
 
-    <!--<select id="getCastRelatedToMovieSortByMovieCount" resultMap="genreMovieMap">-->
-        <!--SELECT name FROM movies as-->
-    <!--</select>-->
+
+    <!--start the query on companies-->
+    <select id="getCompanyById" resultMap="companyMap">
+        SELECT id, name FROM companies WHERE id = #{id}
+    </select>
+    
+    <select id="getCompanyByName" resultMap="companyMap">
+        SELECT c.id AS id, c.name AS name, SUM(REVENUE), COUNT(*) FROM companies AS c
+        JOIN movie_company_relation AS mcr ON mcr.company_id = c.id
+        JOIN movies AS m ON m.id = mcr.movie_id
+        WHERE c.name = #{name}
+        GROUP BY c.id, c.name
+    </select>
+
+    <select id="getCastRelatedToCompany" resultMap="castCompanyMap">
+        SELECT cast_rating.name AS name, cast_rating.id AS id, cast_rating.gender AS gender, cast_rating.rating AS order_rating, COUNT(*) AS movie_count, AVG(movies.vote_average) AS average_rating
+        FROM (
+            SELECT close_cast.crew_name AS name, close_cast.id AS id, close_cast.gender AS gender, SUM(close_cast.rating) AS rating
+            FROM (
+                SELECT crews.name AS crew_name, crews.gender AS gender, crews.id AS id, genres.name AS genre_name, temp.company_genre_count AS company_genre_count, count(*) AS crew_genre_count,
+                temp.company_genre_count * count(*) AS rating FROM crews
+                JOIN movie_cast_relation AS mcr ON mcr.cast_id = crews.id
+                JOIN movie_genre_relation AS mgr ON mgr.movie_id = mcr.movie_id
+                JOIN genres ON genres.id = mgr.genre_id
+                JOIN movie_company_relation ON mgr.movie_id = movie_company_relation.movie_id
+                JOIN (
+                    select mgr.genre_id AS genres_id, count(*) AS company_genre_count
+                    FROM movie_genre_relation AS mgr
+                    JOIN movie_company_relation AS mcr ON mgr.movie_id = mcr.movie_id
+                    WHERE mcr.company_id = #{id}
+                    GROUP BY mgr.genre_id
+                    ) AS temp
+                ON genres.id = genres_id
+                WHERE movie_company_relation.company_id = #{id}
+                GROUP BY crew_name, gender, id, genre_name, company_genre_count
+                ) AS close_cast
+            GROUP BY name, close_cast.id, gender
+            ORDER BY SUM(close_cast.rating) DESC
+            LIMIT 10) AS cast_rating
+        JOIN movie_cast_relation ON movie_cast_relation.cast_id = cast_rating.id
+        JOIN movies ON movies.id = movie_cast_relation.movie_id
+        JOIN movie_company_relation ON movies.id = movie_company_relation.movie_id
+        where movie_company_relation.company_id = #{id}
+        GROUP BY name, cast_rating.id, cast_rating.gender, order_rating
+        ORDER BY order_rating DESC
+        LIMIT 10
+    </select>
+
+    <select id="getCrewRelatedToCompany" resultMap="crewCompanyMap">
+        SELECT crew_rating.name AS name, crew_rating.id AS id, crew_rating.gender AS gender, crew_rating.job AS job, crew_rating.rating AS order_rating, COUNT(*) AS movie_count, AVG(movies.vote_average) AS average_rating
+        FROM (
+            SELECT close_crew.crew_name AS name, close_crew.id AS id, close_crew.gender AS gender, close_crew.job AS job, SUM(close_crew.rating) AS rating
+            FROM (
+                SELECT crews.name AS crew_name, crews.gender AS gender, crews.id AS id, genres.name AS genre_name, temp.company_genre_count AS company_genre_count, mcr.job AS job, count(*) AS crew_genre_count,
+                temp.company_genre_count * count(*) AS rating FROM crews
+                JOIN movie_crew_relation AS mcr ON mcr.crew_id = crews.id
+                JOIN movie_genre_relation AS mgr ON mgr.movie_id = mcr.movie_id
+                JOIN genres ON genres.id = mgr.genre_id
+                JOIN movie_company_relation ON mgr.movie_id = movie_company_relation.movie_id
+                JOIN (
+                    SELECT mgr.genre_id AS genres_id, count(*) AS company_genre_count
+                    FROM movie_genre_relation AS mgr
+                    JOIN movie_company_relation AS mcr ON mgr.movie_id = mcr.movie_id
+                    WHERE mcr.company_id = 6194
+                    GROUP BY mgr.genre_id
+                    )
+                AS temp
+                ON genres.id = genres_id
+                WHERE movie_company_relation.company_id = 6194 AND mcr.job = "Director"
+                GROUP BY crew_name, gender, id, genre_name, company_genre_count, mcr.job
+                )
+            AS close_crew
+            GROUP BY name, close_crew.id, gender, close_crew.job
+            ) AS crew_rating
+        JOIN movie_crew_relation ON movie_crew_relation.crew_id = crew_rating.id
+        JOIN movies ON movies.id = movie_crew_relation.movie_id
+        JOIN movie_company_relation ON movies.id = movie_company_relation.movie_id
+        where movie_company_relation.company_id = 6194 and movie_crew_relation.job = "Director"
+        GROUP BY name, crew_rating.id, crew_rating.gender, order_rating, crew_rating.job
+        ORDER BY order_rating DESC
+        LIMIT 10
+    </select>
+
+    <select id="getGenreRelatedToCompany" resultMap="genreCompanyMap">
+        SELECT genres.id AS id, genres.name AS name, count(*) AS movie_count, AVG(vote_average) AS average_rating FROM genres
+        JOIN movie_genre_relation AS mgr ON mgr.genre_id = genres.id
+        JOIN movie_company_relation AS mcr ON mcr.movie_id = mgr.movie_id
+        JOIN movies AS m ON mgr.movie_id = m.id
+        WHERE mcr.company_id = #{id}
+        GROUP BY genres.id, genres.name
+        ORDER BY COUNT(*) DESC;
+    </select>
+
+    <select id="getMovieRelatedToCompany" resultMap="movieCompanyMap">
+        SELECT m.id, m.title, m.vote_average AS average_rating, m.release_date FROM movies AS m
+        JOIN movie_company_relation AS mcr ON mcr.movie_id = m.id
+        WHERE mcr.company_id = #{id}
+        ORDER BY m.release_date
+    </select>
 
 </mapper>

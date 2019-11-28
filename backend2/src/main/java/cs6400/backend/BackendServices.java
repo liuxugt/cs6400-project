@@ -10,6 +10,9 @@ import java.util.List;
 
 public class BackendServices {
     DataManager dataManager;
+    final int capacity = 10;
+    final String job_dire = "Director";
+    final String job_write = "Screenplay";
     public BackendServices(){
         try{
             DatabaseSqlSessionFactory databaseSqlSessionFactory = new DatabaseSqlSessionFactory();
@@ -28,16 +31,15 @@ public class BackendServices {
     }
 
     public MovieResponse getMovieResponseByTitle(String title) {
-
         System.out.println(title + " in service");
         Movie basic_info = dataManager.getMovieByTitle(title);
         if(basic_info == null){
             return null;
         }
-
+        int id = basic_info.getId();
         System.out.println(title + " pass null checking");
         MovieResponse response = new MovieResponse(basic_info);
-        List<CompanyMovieRelated> companies = dataManager.getCompaniesByMovieTitle(title);
+        List<CompanyMovieRelated> companies = dataManager.getCompaniesRelatedToMovie(id);
         response.setCompanies(companies);
         System.out.println(title + " get companies");
         System.out.println(companies);
@@ -50,6 +52,22 @@ public class BackendServices {
 
     public Movie getTestMovie(){
         return dataManager.getMovieByTitle("Moana");
+    }
+    public CompanyResponse getCompanyResponseByName(String name){
+        System.out.println(name + " in service");
+        Company basic_info = dataManager.getCompanyByName(name);
+        if(basic_info == null){
+            return null;
+        }
+        System.out.println(name + " pass null checking");
+        CompanyResponse response = new CompanyResponse(basic_info);
+        int id = basic_info.getId();
+        response.setCasts(dataManager.getCastRelatedToCompany(id));
+        response.setDirectors(dataManager.getCrewRelatedToCompany(id, job_dire ));
+        response.setWriters(dataManager.getCrewRelatedToCompany(id,job_write));
+        response.setGenres(dataManager.getGenreRelatedToCompany(id, capacity));
+        response.setMovies(dataManager.getMovieRelatedToCompany(id));
+        return response;
     }
 
 }

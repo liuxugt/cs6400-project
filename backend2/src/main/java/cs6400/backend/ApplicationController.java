@@ -1,7 +1,9 @@
 package cs6400.backend;
 
 import cs6400.struct.Movie;
+import cs6400.struct.Company;
 import cs6400.struct.MovieResponse;
+import cs6400.struct.CompanyResponse;
 import org.apache.ibatis.mapping.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,12 +49,12 @@ public class ApplicationController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/movies/title/{movie_title}")
-    public ResponseEntity<?> getMovieByTitle(@PathVariable String movie_title){
+    public ResponseEntity<?> getMovieResponseByTitle(@PathVariable String movie_title){
         System.out.println(movie_title);
         MovieResponse res = this.repository.getMovieResponseByTitle(movie_title);
         System.out.println(res);
         if (res == null) {
-            return new ResponseEntity<>("404 error: Movie Not Found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("404 error: Movie " + movie_title + " Not Found", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
@@ -62,5 +64,15 @@ public class ApplicationController {
         Movie movies = this.repository.getTestMovie();
         System.out.println(movies);
         return new ResponseEntity<>(movies, HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/api/company/name/{company_name}")
+    public ResponseEntity<?> getCompanyResponseByName(@PathVariable String company_name){
+        System.out.println(company_name);
+        CompanyResponse res = this.repository.getCompanyResponseByName(company_name);
+        if(res == null){
+            return new ResponseEntity<>("404 error: Company " + company_name + " Not Found", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 }

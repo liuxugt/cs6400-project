@@ -30,4 +30,9 @@ public class BackendRepo {
     public Movie getTestMovie(){
         return services.getTestMovie();
     }
+
+    public CompanyResponse getCompanyResponseByName(String name){
+        System.out.println(name + " in repo");
+        return services.getCompanyResponseByName(name);
+    }
 }

@@ -9,21 +9,8 @@ import java.util.List;
 public class DataManager {
 
     SqlSessionFactory factory;
-
-
     public DataManager(SqlSessionFactory factory){
         this.factory = factory;
-    }
-
-    public Movie getMovieById(int id){
-        SqlSession sqlSession = factory.openSession();
-        try{
-            Mapper mapper = sqlSession.getMapper(Mapper.class);
-            return mapper.getMovieById(id);
-
-        } finally{
-            sqlSession.close();
-        }
     }
 
     public List<Movie> getAllMovies(){
@@ -36,6 +23,7 @@ public class DataManager {
         }
     }
 
+    //Start the movie API queries
     public Movie getMovieByTitle(String title){
         SqlSession sqlSession = factory.openSession();
         try{
@@ -46,15 +34,140 @@ public class DataManager {
             sqlSession.close();
         }
     }
-
-    public List<CompanyMovieRelated> getCompaniesByMovieTitle(String title){
+    public Movie getMovieById(int id){
         SqlSession sqlSession = factory.openSession();
         try{
             Mapper mapper = sqlSession.getMapper(Mapper.class);
-            return mapper.getCompaniesRelatedToMovie(title);
+            return mapper.getMovieById(id);
+
+        } finally{
+            sqlSession.close();
+        }
+    }
+
+    public List<CompanyMovieRelated> getCompaniesRelatedToMovie(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getCompaniesRelatedToMovie(id);
         } finally {
             sqlSession.close();
         }
     }
 
+    public List<GenreMovieRelated> getGenresRelatedToMovie(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getGenreRelatedToMovie(id);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    public List<CastMovieRelated> getCastRelatedToMovie(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getCastRelatedToMovie(id);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    public List<CrewMovieRelated> getCrewRelatedToMovie(int id, String job){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getCrewsRelatedToMovie(id, job);
+        } finally {
+            sqlSession.close();
+        }
+    }
+    public List<MovieMovieRelated> getSimilarMovie(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getSimilarMovie(id);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    //Start the company API queries
+    public Company getCompanyByName(String name){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            System.out.println("test");
+            return mapper.getCompanyByName(name);
+        } finally{
+            sqlSession.close();
+        }
+    }
+
+    public Company getCompanyById(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            System.out.println("test");
+            return mapper.getCompanyById(id);
+        } finally{
+            sqlSession.close();
+        }
+    }
+
+    public List<MovieCompanyRelated> getMovieRelatedToCompany(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            System.out.println("test");
+            return mapper.getMovieRelatedToCompany(id);
+        } finally{
+            sqlSession.close();
+        }
+    }
+
+    public List<CastCompanyRelated> getCastRelatedToCompany(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            System.out.println("test");
+            return mapper.getCastRelatedToCompany(id);
+        } finally{
+            sqlSession.close();
+        }
+    }
+    public List<CrewCompanyRelated> getCrewRelatedToCompany(int id, String job){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            System.out.println("test");
+            return mapper.getCrewRelatedToCompany(id, job);
+        } finally{
+            sqlSession.close();
+        }
+    }
+
+    public List<CompanyCompanyRelated> getCompanyRelatedToCompany(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            System.out.println("test");
+            return mapper.getSimilarCompany(id);
+        } finally{
+            sqlSession.close();
+        }
+    }
+
+    public List<GenreCompanyRelated> getGenreRelatedToCompany(int id, int limit){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            System.out.println("test");
+            return mapper.getGenreRelatedToCompany(id, limit);
+        } finally{
+            sqlSession.close();
+        }
+    }
 }
