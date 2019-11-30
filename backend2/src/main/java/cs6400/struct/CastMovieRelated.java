@@ -1,11 +1,14 @@
 package cs6400.struct;
 
 public class CastMovieRelated {
+    private int id;
+
     private String name;
     private int gender;
     private String characters;
 
-    public CastMovieRelated(String name, int gender, String characters) {
+    public CastMovieRelated(int id, String name, int gender, String characters) {
+        this.id = id;
         this.name = name;
         this.gender = gender;
         this.characters = characters;
@@ -14,6 +17,14 @@ public class CastMovieRelated {
     public CastMovieRelated() {
     }
 
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getName() {
         return name;
     }

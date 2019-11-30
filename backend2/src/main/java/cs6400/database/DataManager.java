@@ -84,11 +84,21 @@ public class DataManager {
             sqlSession.close();
         }
     }
-    public List<MovieMovieRelated> getSimilarMovie(int id){
+    public List<MovieMovieRelated> getMovieInSameCollection(int id){
         SqlSession sqlSession = factory.openSession();
         try{
             Mapper mapper = sqlSession.getMapper(Mapper.class);
-            return mapper.getSimilarMovie(id);
+            return mapper.getMovieInSameCollection(id);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    public List<MovieMovieRelated> getSimilarMovie(int id, int limit){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getSimilarMovie(id, limit);
         } finally {
             sqlSession.close();
         }
@@ -166,6 +176,26 @@ public class DataManager {
             Mapper mapper = sqlSession.getMapper(Mapper.class);
             System.out.println("test");
             return mapper.getGenreRelatedToCompany(id, limit);
+        } finally{
+            sqlSession.close();
+        }
+    }
+
+    public List<CompanyCompanyRelated> getSubordinate(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getSubordinate(id);
+        } finally{
+            sqlSession.close();
+        }
+    }
+
+    public List<CompanyCompanyRelated> getParentCompany(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getParentCompany(id);
         } finally{
             sqlSession.close();
         }

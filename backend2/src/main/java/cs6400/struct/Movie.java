@@ -4,7 +4,7 @@ public class Movie {
     int id;
     private String title;
     private String language;
-    private double voting_average;
+    private double average_rating;
     private String country;
     private String collection_name;
     private String release_date;
@@ -34,12 +34,12 @@ public class Movie {
         this.language = language;
     }
 
-    public double getVoting_average() {
-        return voting_average;
+    public double getAverage_rating() {
+        return average_rating;
     }
 
-    public void setVoting_average(double voting_average) {
-        this.voting_average = voting_average;
+    public void setAverage_rating(double average_rating) {
+        this.average_rating = average_rating;
     }
 
     public String getCountry() {
@@ -77,11 +77,11 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(int id,String title, String language, double voting_average, String country, String collection_name, String release_date, String status) {
+    public Movie(int id,String title, String language, double average_rating, String country, String collection_name, String release_date, String status) {
         this.id = id;
         this.title = title;
         this.language = language;
-        this.voting_average = voting_average;
+        this.average_rating = average_rating;
         this.country = country;
         this.collection_name = collection_name;
         this.release_date = release_date;

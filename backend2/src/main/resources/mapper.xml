@@ -22,11 +22,18 @@
     </select>
 
     <select id="getMovieById" resultMap="movieMap">
-        SELECT id, title, vote_average, vote_count FROM movies WHERE id=#{id};
+        SELECT m.id, m.title, l.name AS language, m.vote_average AS average_rating, coun.name AS country, coll.name AS collection_name, m.release_date, m.status
+        FROM movies AS m
+        LEFT OUTER JOIN collections AS coll ON m.belongs_to_collection_id = coll.id
+        JOIN movie_country_relation AS mcr ON mcr.movie_id = m.id
+        JOIN countries AS coun ON coun.iso_3166_1 = mcr.country_id
+        JOIN movie_language_relation AS mlr ON mlr.movie_id = m.id
+        JOIN languages AS l ON l.iso_639_1 = mlr.language_id
+        WHERE m.id = #{id}
     </select>
 
     <select id="getMovieByTitle" resultMap="movieMap">
-        SELECT m.id, m.title, l.name AS language, m.vote_average, coun.name AS country, coll.name AS collection_name, m.release_date, m.status
+        SELECT m.id, m.title, l.name AS language, m.vote_average AS average_rating, coun.name AS country, coll.name AS collection_name, m.release_date, m.status
         FROM movies AS m
         LEFT OUTER JOIN collections AS coll ON m.belongs_to_collection_id = coll.id
         JOIN movie_country_relation AS mcr ON mcr.movie_id = m.id
@@ -47,10 +54,10 @@
     <select id="getCrewsRelatedToMovie" resultMap="crewMovieMap">
         SELECT c.id, c.name, c.gender, mcr.department, mcr.job FROM crews AS c
         JOIN movie_crew_relation AS mcr ON mcr.crew_id = c.id
-        where mcr.movie_id = #{id} and mcr.department = #{department}
+        where mcr.movie_id = #{id} and mcr.job = #{job}
     </select>
-    <select id="getCastRelatedToMovie" resultMap="crewMovieMap">
-        SELECT c.id, c.name, c.gender, mcr.character FROM crews AS c
+    <select id="getCastRelatedToMovie" resultMap="castMovieMap">
+        SELECT c.id, c.name, c.gender, mcr.characters FROM crews AS c
         JOIN movie_cast_relation as mcr ON mcr.cast_id = c.id
         where mcr.movie_id = #{id}
         limit 10
@@ -62,18 +69,52 @@
         JOIN movie_genre_relation as mgr2 ON mgr2.genre_id = g.id
         JOIN movies as m ON mgr2.movie_id = m.id
         WHERE mgr.movie_id = #{id}
-        ORDER by AVG(vote_average) DESC
         GROUP by g.id, g.name
+        ORDER by AVG(vote_average) DESC
+    </select>
+
+    <select id="getMovieInSameCollection" resultMap="movieMovieMap">
+        SELECT m.id, m.title, m.release_date, 1 AS order_rating, m.vote_average AS average_rating FROM movies AS m
+        JOIN movies AS m2 ON m.belongs_to_collection_id = m2.belongs_to_collection_id
+        WHERE m2.id = #{id} and m.id <![CDATA[ <> ]]> #{id}
     </select>
 
     <select id="getSimilarMovie" resultMap="movieMovieMap">
-        SELECT * FROM movies;
+        WITH genre_number(num) as(
+            select count(*) from movie_genre_relation where movie_id = #{id}
+        ),
+        same_company_number(id, num) as (
+            select mcr1.movie_id, count(*) FROM movie_company_relation AS mcr1
+            JOIN movie_company_relation AS mcr2 ON mcr2.company_id = mcr1.company_id
+            WHERE mcr2.movie_id = #{id} and mcr1.movie_id <![CDATA[ <> ]]> #{id}
+            GROUP BY mcr1.movie_id
+            ORDER BY count(*)
+        )
+        SELECT m.id, m.title, m.release_date, count(*)/gn.num + ifnull(same.num, 0)/4 AS order_rating, m.vote_average AS average_rating, gn.num FROM movies AS m
+        JOIN genre_number as gn
+        JOIN movie_genre_relation AS mgr ON m.id = mgr.movie_id
+        LEFT JOIN same_company_number AS same ON same.id = m.id
+        WHERE mgr.genre_id in (
+            SELECT mgr2.genre_id FROM movie_genre_relation AS mgr2
+            WHERE mgr2.movie_id = #{id}
+        ) AND m.status = "Released" AND m.id not in (
+            SELECT m.id FROM movies AS m
+            JOIN movies AS m2 ON m.belongs_to_collection_id = m2.belongs_to_collection_id
+            WHERE m2.id = #{id}
+        )
+        GROUP BY m.id, m.title, m.release_date, gn.num, same.num, m.vote_average having gn.num >= count(*)
+        ORDER BY order_rating DESC
+        limit #{limit}
     </select>
 
 
     <!--start the query on companies-->
     <select id="getCompanyById" resultMap="companyMap">
-        SELECT id, name FROM companies WHERE id = #{id}
+        SELECT c.id AS id, c.name AS name, SUM(REVENUE), COUNT(*) FROM companies AS c
+        JOIN movie_company_relation AS mcr ON mcr.company_id = c.id
+        JOIN movies AS m ON m.id = mcr.movie_id
+        WHERE c.id = #{id}
+        GROUP BY c.id, c.name
     </select>
     
     <select id="getCompanyByName" resultMap="companyMap">
@@ -164,10 +205,40 @@
     </select>
 
     <select id="getMovieRelatedToCompany" resultMap="movieCompanyMap">
-        SELECT m.id, m.title, m.vote_average AS average_rating, m.release_date FROM movies AS m
+        SELECT m.id, m.title, m.vote_average AS average_rating, m.popularity, m.release_date FROM movies AS m
         JOIN movie_company_relation AS mcr ON mcr.movie_id = m.id
-        WHERE mcr.company_id = #{id}
-        ORDER BY m.release_date
+        WHERE mcr.company_id = #{id} and m.status = "Released"
+        ORDER BY m.popularity
     </select>
 
+
+    <select id="getSubordinate" resultMap="companyCompanyMap">
+        with recursive subordinate AS (
+            SELECT c.name, c.id, cc.parent_id FROM companies AS c
+            LEFT OUTER JOIN parent_company AS cc ON cc.company_id = c.id
+            WHERE c.id = #{id}
+
+            UNION ALL
+
+            SELECT c2.name, c2.id, cc2.parent_id FROM companies AS c2
+            LEFT OUTER JOIN parent_company AS cc2 ON cc2.company_id = c2.id
+            JOIN subordinate AS sub ON cc2.parent_id = sub.id
+        )
+        SELECT id, name from subordinate;
+    </select>
+
+    <select id = "getParentCompany" resultMap="companyCompanyMap">
+        with recursive subordinate AS (
+            SELECT c.name, c.id, cc.parent_id FROM companies AS c
+            LEFT OUTER JOIN parent_company AS cc ON cc.company_id = c.id
+            WHERE c.id = #{id}
+
+            UNION ALL
+
+            SELECT c2.name, c2.id, cc2.parent_id FROM companies AS c2
+            LEFT OUTER JOIN parent_company AS cc2 ON cc2.company_id = c2.id
+            JOIN subordinate AS sub ON sub.parent_id = c2.id
+        )
+        SELECT id, name from subordinate;
+    </select>
 </mapper>

@@ -1,10 +1,12 @@
 package cs6400.struct;
 
 public class MovieMovieRelated {
-    String reason;
-    String title;
-    double voting_average;
-    double voring_count;
+    private String reason = null;
+    private String id;
+    private String title;
+    private String release_date;
+    private double order_rating;
+    private double average_rating;
 
     public String getReason() {
         return reason;
@@ -12,6 +14,14 @@ public class MovieMovieRelated {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -22,27 +32,36 @@ public class MovieMovieRelated {
         this.title = title;
     }
 
-    public double getVoting_average() {
-        return voting_average;
+    public String getRelease_date() {
+        return release_date;
     }
 
-    public void setVoting_average(double voting_average) {
-        this.voting_average = voting_average;
+    public void setRelease_date(String release_date) {
+        this.release_date = release_date;
     }
 
-    public double getVoring_count() {
-        return voring_count;
+    public double getOrder_rating() {
+        return order_rating;
     }
 
-    public void setVoring_count(double voring_count) {
-        this.voring_count = voring_count;
+    public void setOrder_rating(double order_rating) {
+        this.order_rating = order_rating;
     }
 
-    public MovieMovieRelated(String reason, String title, double voting_average, double voring_count) {
-        this.reason = reason;
+    public double getAverage_rating() {
+        return average_rating;
+    }
+
+    public void setAverage_rating(double average_rating) {
+        this.average_rating = average_rating;
+    }
+
+    public MovieMovieRelated(String id, String title, String release_date, double order_rating, double average_rating) {
+        this.id = id;
         this.title = title;
-        this.voting_average = voting_average;
-        this.voring_count = voring_count;
+        this.release_date = release_date;
+        this.order_rating = order_rating;
+        this.average_rating = average_rating;
     }
 
     public MovieMovieRelated() {

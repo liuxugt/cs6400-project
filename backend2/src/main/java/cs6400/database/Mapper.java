@@ -19,7 +19,9 @@ public interface Mapper {
     public List<GenreMovieRelated> getGenreRelatedToMovie(@Param("id") int id);
     public List<MovieMovieRelated> getMovieReleaseCloseToMovie(@Param("id") int id);
     public List<MovieMovieRelated> getMovieMatchGenreToMovie(@Param("id") int id);
-    public List<MovieMovieRelated> getSimilarMovie(@Param("id") int id);
+    public List<MovieMovieRelated> getSimilarMovie(@Param("id") int id, @Param("limit") int limit);
+    public List<MovieMovieRelated> getMovieInSameCollection(@Param("id") int id);
+
 
     public List<CompanyCompanyRelated> getSimilarCompany(@Param("id") int id);
     public List<CompanyCompanyRelated> getParentCompany(@Param("id") int id);

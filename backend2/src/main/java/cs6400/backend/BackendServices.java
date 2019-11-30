@@ -5,14 +5,19 @@ import cs6400.database.DatabaseSqlSessionFactory;
 import cs6400.struct.*;
 import org.apache.ibatis.mapping.Environment;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
 public class BackendServices {
     DataManager dataManager;
-    final int capacity = 10;
+    final int capacity = 20;
+    final int genre_capacity = 10;
     final String job_dire = "Director";
     final String job_write = "Screenplay";
+    final String[] sample_reason_company = new String[] {"subordinate or parent", "similar recent genres"};
+    final String[] sample_reason_movie = new String[] {"same collection", "similar genre and companies", "similar genres with close release"};
     public BackendServices(){
         try{
             DatabaseSqlSessionFactory databaseSqlSessionFactory = new DatabaseSqlSessionFactory();
@@ -39,14 +44,46 @@ public class BackendServices {
         int id = basic_info.getId();
         System.out.println(title + " pass null checking");
         MovieResponse response = new MovieResponse(basic_info);
-        List<CompanyMovieRelated> companies = dataManager.getCompaniesRelatedToMovie(id);
-        response.setCompanies(companies);
-        System.out.println(title + " get companies");
-        System.out.println(companies);
-        System.out.println(response);
-//        if(!basic_info.getStatus().equals("Released")){
-//            return response;
-//        }
+        response.setCompanies(dataManager.getCompaniesRelatedToMovie(id));
+        response.setGenres(dataManager.getGenresRelatedToMovie(id));
+        response.setDirectors(dataManager.getCrewRelatedToMovie(id, job_dire));
+        response.setWriters(dataManager.getCrewRelatedToMovie(id, job_write));
+        response.setCasts(dataManager.getCastRelatedToMovie(id));
+        if(basic_info.getCollection_name() != null){
+            response.addAllMovie(dataManager.getMovieInSameCollection(id));
+            for(int i = 0; i < response.getMovieSize(); i++){
+                response.getMovies().get(i).setReason(sample_reason_movie[0]);
+            }
+        }
+        List<MovieMovieRelated> similarMovie = dataManager.getSimilarMovie(id, capacity - response.getMovieSize());
+        for(int i  =0; i < similarMovie.size(); i++){
+            similarMovie.get(i).setReason(sample_reason_movie[1]);
+        }
+
+        Collections.sort(similarMovie, new Comparator<MovieMovieRelated>(){
+            public int compare(MovieMovieRelated a1, MovieMovieRelated a2){
+                int year = Integer.parseInt(basic_info.getRelease_date().split("-")[0]);
+                int year1 = Integer.parseInt(a1.getRelease_date().split("-")[0]);
+                int year2 = Integer.parseInt(a2.getRelease_date().split("-")[0]);
+                a1.setOrder_rating(a1.getOrder_rating() - Math.abs(year1 - year) * 0.05);
+                a2.setOrder_rating(a2.getOrder_rating() - Math.abs(year2 - year) * 0.05);
+                double order = a2.getOrder_rating() - a1.getOrder_rating();
+                if( order > 0){
+                    return 1;
+                }
+                else if(order < 0){
+                    return -1;
+                }
+                else{
+                    return 0;
+                }
+
+            }
+        });
+        response.addAllMovie(similarMovie);
+        if(!basic_info.getStatus().equals("Released")){
+            return response;
+        }
         return response;
     }
 
@@ -65,8 +102,17 @@ public class BackendServices {
         response.setCasts(dataManager.getCastRelatedToCompany(id));
         response.setDirectors(dataManager.getCrewRelatedToCompany(id, job_dire ));
         response.setWriters(dataManager.getCrewRelatedToCompany(id,job_write));
-        response.setGenres(dataManager.getGenreRelatedToCompany(id, capacity));
+        response.setGenres(dataManager.getGenreRelatedToCompany(id, genre_capacity));
         response.setMovies(dataManager.getMovieRelatedToCompany(id));
+        List<CompanyCompanyRelated> parent = dataManager.getParentCompany(id);
+        List<CompanyCompanyRelated> subordinate = dataManager.getSubordinate(parent.get(parent.size() - 1).getId());
+        for(int i = 0; i < subordinate.size(); i++){
+            if(subordinate.get(i).getId() != id){
+                subordinate.get(i).setReason(sample_reason_company[0]);
+                response.addCompany(subordinate.get(i));
+            }
+        }
+
         return response;
     }
 

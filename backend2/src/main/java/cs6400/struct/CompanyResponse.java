@@ -29,6 +29,13 @@ public class CompanyResponse {
     public void addWriter(CrewCompanyRelated writer) { writers.add(writer); }
     public void addDirector(CrewCompanyRelated director) { directors.add(director); }
 
+    public void addAllMovie(List<MovieCompanyRelated> movies) { this.movies.addAll(movies);}
+    public void addAllCompany(List<CompanyCompanyRelated> companies) { this.companies.addAll(companies); }
+    public void addAllGenre(List<GenreCompanyRelated> genres) { this.genres.addAll(genres); }
+    public void addAllWriter(List<CrewCompanyRelated> writers) { this.writers.addAll(writers); }
+    public void addAllDirector(List<CrewCompanyRelated> directors) { this.directors.addAll(directors);}
+    public void addAllCast(List<CastCompanyRelated> casts) { this.casts.addAll(casts); }
+
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
