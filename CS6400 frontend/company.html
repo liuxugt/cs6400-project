@@ -52,9 +52,15 @@
             </a>
             <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
               <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">Related Crews</h5>
+                <h5 class="mb-1">Related Directors</h5>
               </div>
-              <p class="mb-1" id="comp_crew"></p>
+              <p class="mb-1" id="comp_directors"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Related Writers</h5>
+                </div>
+                <p class="mb-1" id="comp_writers"></p>
             </a>
             <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
               <div class="d-flex w-100 justify-content-between">
@@ -85,11 +91,14 @@
     <script type="text/javascript" src="js/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src = "get_item.js"></script>
     <script type="text/javascript">
+        all_data_movie = JSON.parse(localStorage.getItem("company_data"));
+        console.log(all_data_movie);
       document.getElementById('comp_name').innerHTML=comp_name();
       document.getElementById('comp_revenue').innerHTML=comp_revenue();
       document.getElementById('comp_movie_count').innerHTML=comp_movie_count();
       document.getElementById('comp_cast').innerHTML=comp_cast();
-      document.getElementById('comp_crew').innerHTML=comp_crew();
+      document.getElementById('comp_directors').innerHTML=comp_director();
+      document.getElementById('comp_writers').innerHTML=comp_writer();
       document.getElementById('comp_genre').innerHTML=comp_genre();
       document.getElementById('comp_movie').innerHTML=comp_movie();
       document.getElementById('comp_company').innerHTML=comp_company();

@@ -67,7 +67,9 @@
                   error: function(xhr, err){
                       alert('search failed')},
                   success: function (data) {   
-                      all_data_movie=copy(data);                
+                      all_data_movie=copy(data);
+               console.log(all_data_movie);
+               localStorage.setItem("movie_data", JSON.stringify(all_data_movie));
                       window.location.href='movie.html';
                   }
               })                          
@@ -75,7 +77,7 @@
 
       document.getElementById('companybutton').onclick = function(){
         var company_name=document.getElementById("companysearch").value;
-        console.log(movie_name)
+        console.log(company_name)
         $.ajax({
                   url: "http://localhost:8080/api/company/name/"+company_name,
                   type: "GET",
@@ -88,7 +90,8 @@
                   error: function(xhr, err){
                       alert('search failed')},
                   success: function (data) {   
-                      all_data_movie=copy(data);                
+                      all_data_movie=copy(data);
+               localStorage.setItem("company_data", JSON.stringify(all_data_movie));
                       window.location.href='company.html';
                   }
               })                          

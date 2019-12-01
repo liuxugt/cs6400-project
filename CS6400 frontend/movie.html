@@ -116,6 +116,9 @@
     <script type="text/javascript" src="js/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src = "get_item.js"></script>
     <script type="text/javascript">
+      all_data_movie = JSON.parse(localStorage.getItem("movie_data"));
+      console.log(all_data_movie);
+      console.log(all_data_movie['title']);
       document.getElementById('movie_title').innerHTML=movie_title();
       document.getElementById('movie_language').innerHTML=movie_language();
       document.getElementById('movie_average_rating').innerHTML=movie_average_rating();

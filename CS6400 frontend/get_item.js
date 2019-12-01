@@ -9,7 +9,7 @@ var gender={
 function copy (obj) {
    let newObj = {};
      for (let item in obj ){
-       newObj[item] = obj
+         newObj[item] = obj[item];
      }
      return newObj;
 }
@@ -35,7 +35,7 @@ function movie_collection_name(){
 }
 
 function movie_release_data(){
-	return "<td>"+all_data_movie['release_data']+"</td></br>";
+	return "<td>"+all_data_movie['release_date']+"</td></br>";
 }
 
 function movie_status(){
@@ -61,7 +61,8 @@ function movie_company()
 	var string="";
 	for(let item in all_data_movie['companies'])
 	{
-		string+="<td>"+item['name']+" ("+item['revenue']+")"+"</td></br>";
+        console.log("item is " + item);
+        string+="<td>"+all_data_movie['companies'][item]['name']+" (revenue: "+all_data_movie['companies'][item]['revenue']+")"+"</td></br>";
 	}
 	return string;
 }
@@ -71,7 +72,7 @@ function movie_cast()
 	var string="";
 	for(let item in all_data_movie['casts'])
 	{
-		string+="<td>"+item['name']+" ("+gender[item['gender']]+", "+item['characters']+")"+"</td></br>";
+        string+="<td>"+all_data_movie['casts'][item]['name']+" ("+gender[all_data_movie['casts'][item]['gender']]+", "+all_data_movie['casts'][item]['characters']+")"+"</td></br>";
 	}
 	return string;
 }
@@ -81,7 +82,7 @@ function movie_director()
 	var string="";
 	for(let item in all_data_movie['directors'])
 	{
-		string+="<td>"+item['name']+" ("+gender[item['gender']]+", "+item['department']+")"+"</td></br>";
+		string+="<td>"+all_data_movie['directors'][item]['name']+" ("+gender[all_data_movie['directors'][item]['gender']]+", "+all_data_movie['directors'][item]['department']+")"+"</td></br>";
 	}
 	return string;
 }
@@ -91,7 +92,7 @@ function movie_writer()
 	var string="";
 	for(let item in all_data_movie['writers'])
 	{
-		string+="<td>"+item['name']+" ("+gender[item['gender']]+", "+item['department']+")"+"</td></br>";
+		string+="<td>"+all_data_movie['writers'][item]['name']+" ("+gender[all_data_movie['writers'][item]['gender']]+", "+all_data_movie['writers'][item]['department']+")"+"</td></br>";
 	}
 	return string;
 }
@@ -101,7 +102,7 @@ function movie_genre()
 	var string="";
 	for(let item in all_data_movie['genres'])
 	{
-		string+="<td>"+item['name']+" (average rating: "+item['average_rating']+", movie_number: "+item['movie_count']+")"+"</td></br>";
+		string+="<td>"+all_data_movie['genres'][item]['name']+" (average rating: "+all_data_movie['genres'][item]['average_rating']+", movie_number: "+all_data_movie['genres'][item]['movie_count']+")"+"</td></br>";
 	}
 	return string;
 }
@@ -111,7 +112,7 @@ function movie_movie()
 	var string="";
 	for(let item in all_data_movie['movies'])
 	{
-		string+="<td>"+item['title']+" (data: "+item['release_data']+", order rating: "+item['order_rating']+", average rating: "+item['average_rating']+", reason: "+item['reason']+")"+"</td></br>";
+		string+="<td>"+all_data_movie['movies'][item]['title']+" (date: "+all_data_movie['movies'][item]['release_date']+", order rating: "+all_data_movie['movies'][item]['order_rating']+", average rating: "+all_data_movie['movies'][item]['average_rating']+", reason: "+item['reason']+")"+"</td></br>";
 	}
 	return string;
 }
@@ -122,27 +123,42 @@ function comp_cast()
 	var string="";
 	for(let item in all_data_movie['casts'])
 	{
-		string+="<td>"+item['name']+" (order rating: "+item['order_rating']+", movie_number: "+item['movie_count']+", average rating: "+item['average_rating']+")"+"</td></br>";
+		string+="<td>"+all_data_movie['casts'][item]['name']+" (order rating: "+all_data_movie['casts'][item]['order_rating']+", movie_number: "+all_data_movie['casts'][item]['movie_count']+", average rating: "+all_data_movie['casts'][item]['average_rating']+")"+"</td></br>";
 	}
 	return string;
 }
 
-function comp_crew()
-{
-	var string="";
-	for(let item in all_data_movie['crews'])
-	{
-		string+="<td>"+item['name']+" ("+gender[item['gender']]+", "+item['job']+ ", order rating: "+item['order_rating']+", movie count:"+item['movie_count']+", average rating:"+item['average_rating']+")"+"</td></br>";
-	}
-	return string;
+function comp_director(){
+    var string = "";
+    for(let item in all_data_movie['directors']){
+        string += "<td>"+all_data_movie['directors'][item]['name']+" ("+gender[all_data_movie['directors'][item]['gender']]+", "+all_data_movie['directors'][item]['job']+ ", order rating: "+all_data_movie['directors'][item]['order_rating']+", movie count:"+all_data_movie['directors'][item]['movie_count']+", average rating:"+all_data_movie['directors'][item]['average_rating']+")"+"</td></br>";
+    }
+    return string;
 }
+function comp_writer(){
+    var string = ""
+    for(let item in all_data_movie['writers']){
+        string += "<td>"+all_data_movie['writers'][item]['name']+" ("+gender[all_data_movie['writers'][item]['gender']]+", "+all_data_movie['writers'][item]['job']+ ", order rating: "+all_data_movie['writers'][item]['order_rating']+", movie count:"+all_data_movie['writers'][item]['movie_count']+", average rating:"+all_data_movie['writers'][item]['average_rating']+")"+"</td></br>";
+    }
+    return string;
+}
+//
+//function comp_crew()
+//{
+//    var string="";
+//    for(let item in all_data_movie['crews'])
+//    {
+//        string+="<td>"+all_data_movie['crews'][item]['name']+" ("+gender[all_data_movie['crews'][item]['gender']]+", "+all_data_movie['crews'][item]['job']+ ", order rating: "+all_data_movie['crews'][item]['order_rating']+", movie count:"+all_data_movie['crews'][item]['movie_count']+", average rating:"+all_data_movie['crews'][item]['average_rating']+")"+"</td></br>";
+//    }
+//    return string;
+//}
 
 function comp_genre()
 {
 	var string="";
 	for(let item in all_data_movie['genres'])
 	{
-		string+="<td>"+item['name']+" (average rating: "+item['average_rating']+", movie_number: "+item['movie_count']+")"+"</td></br>";
+		string+="<td>"+all_data_movie['genres'][item]['name']+" (average rating: "+all_data_movie['genres'][item]['average_rating']+", movie_number: "+all_data_movie['genres'][item]['movie_count']+")"+"</td></br>";
 	}
 	return string;
 }
@@ -152,7 +168,7 @@ function comp_movie()
 	var string="";
 	for(let item in all_data_movie['movies'])
 	{
-		string+="<td>"+item['title']+" (data: "+item['release_data']+", popularity: "+item['popularity']+", average rating: "+item['average_rating']+")"+"</td></br>";
+		string+="<td>"+all_data_movie['movies'][item]['title']+" (date: "+all_data_movie['movies'][item]['release_date']+", popularity: "+all_data_movie['movies'][item]['popularity']+", average rating: "+all_data_movie['movies'][item]['average_rating']+")"+"</td></br>";
 	}
 	return string;
 }
@@ -162,7 +178,7 @@ function comp_company()
 	var string="";
 	for(let item in all_data_movie['companies'])
 	{
-		string+="<td>"+item['name']+" (revenue: "+item['revenue']+", movie number"+item['movie_count']+", reason"+item['reason']+")"+"</td></br>";
+        string+="<td>"+ all_data_movie['companies'][item]['name']+" (revenue: "+ all_data_movie['companies'][item]['revenue']+", movie number"+ all_data_movie['companies'][item]['movie_count']+", reason: "+ all_data_movie['companies'][item]['reason']+")"+"</td></br>";
 	}
 	return string;
 }
