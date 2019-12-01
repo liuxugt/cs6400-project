@@ -1,6 +1,7 @@
 package cs6400.database;
 
-import cs6400.struct.*;
+import cs6400.struct.company.*;
+import cs6400.struct.movie.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

@@ -2,8 +2,12 @@ package cs6400.backend;
 
 import cs6400.database.DataManager;
 import cs6400.database.DatabaseSqlSessionFactory;
-import cs6400.struct.*;
-import org.apache.ibatis.mapping.Environment;
+import cs6400.struct.company.Company;
+import cs6400.struct.company.CompanyCompanyRelated;
+import cs6400.struct.company.CompanyResponse;
+import cs6400.struct.movie.Movie;
+import cs6400.struct.movie.MovieMovieRelated;
+import cs6400.struct.movie.MovieResponse;
 
 import java.util.Collections;
 import java.util.Comparator;

@@ -1,4 +1,4 @@
-package cs6400.struct;
+package cs6400.struct.movie;
 
 public class Movie {
     int id;

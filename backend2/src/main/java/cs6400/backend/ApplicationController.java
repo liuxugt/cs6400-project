@@ -1,11 +1,8 @@
 package cs6400.backend;
 
-import cs6400.struct.Movie;
-import cs6400.struct.Company;
-import cs6400.struct.MovieResponse;
-import cs6400.struct.CompanyResponse;
-import org.apache.ibatis.mapping.Environment;
-import org.springframework.beans.factory.annotation.Autowired;
+import cs6400.struct.movie.Movie;
+import cs6400.struct.movie.MovieResponse;
+import cs6400.struct.company.CompanyResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,5 +71,10 @@ public class ApplicationController {
             return new ResponseEntity<>("404 error: Company " + company_name + " Not Found", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/api/visualization/{genre}/{content_id}")
+    public ResponseEntity<?> getPredictedGenreContent(@PathVariable("genre") String genre, @PathVariable("content_id") int id){
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

@@ -1,4 +1,4 @@
-package cs6400.struct;
+package cs6400.struct.company;
 
 import java.util.ArrayList;
 import java.util.List;

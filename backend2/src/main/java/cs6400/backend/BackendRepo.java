@@ -1,9 +1,10 @@
 package cs6400.backend;
 
 import java.util.List;
-import java.util.ArrayList;
-import cs6400.struct.*;
-import org.apache.ibatis.mapping.Environment;
+
+import cs6400.struct.company.CompanyResponse;
+import cs6400.struct.movie.Movie;
+import cs6400.struct.movie.MovieResponse;
 
 public class BackendRepo {
 
