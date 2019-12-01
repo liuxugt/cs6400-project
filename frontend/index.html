@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>Dataset Q&A system</title>
+    <link href="css/index.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+    <div id="main" align="center">
+        <h1>问答系统</h1>
+        <svg width="100%" height="1%">
+            <rect width="100%" height="5%" style="fill:lightsteelblue;stroke-width:3;stroke:lightsteelblue" />
+        </svg>
+    </div>
+
+    <div id="login" class="show" style="position:absolute; left:38%; top:20%; font-size:18px" text-algin="position">
+<!--         <tr align="center" valign="middle"> -->
+        <legend align="center" style="font-size: 20px">用户登录</legend></br>
+        <td>邮箱：<input type="text" id = "email"> (请输入邮箱)</td></br></br>
+        <td>用户名：<input type="text" id = "usr"> (请输入用户名)</td></br></br>
+        <td>密码：<input type="password" id = "pwd">（输入密码）</td></br></br>
+
+        <input type="button" id="submit" value="提交" style="font-size: 14px">
+        <input type="button" id="clear" value="重置" style="font-size: 14px">
+        <input type="button" id="needtosignup" value="新用户注册" style="font-size: 14px">
+<!--         </tr> -->
+    </div>
+
+    <div id="signup" class="hide" style="position:absolute; left:38%; top:20%; font-size:18px" text-algin="position">
+        <legend align="center" style="font-size: 20px">用户注册</legend></br>
+        <td>邮箱：<input type="text" id = "newemail"> (请输入邮箱)</td></br></br>
+        <td>用户名：<input type="text" id = "newusr"> (请输入用户名)</td></br></br>
+        <td>密码：<input type="password" id = "newpwd1">（输入密码）</td></br></br>
+        <td>确认密码：<input type="password" id = "newpwd2">（再次输入密码）</td></br></br>
+
+        <input type="button" id="newsubmit" value="提交" style="font-size: 14px">
+        <input type="button" id="clear" value="重置" style="font-size: 14px">
+    </div>
+
+    <div id="userpage" class="hide" style="position:absolute; left:0%; top:12%; font-size:18px" text-algin="position">
+        <!-- <td>用户:</td> -->
+        <p id="_name_"></p>
+        <input type="button" id="return_to_main" value="回到主页面" style="font-size: 16px"></br>
+        <input type="button" id="gettopic" value="了解所有话题" style="font-size: 16px">
+        <td  >  是否关注话题<input type="text" id = "followtopic">（输入话题号）    </td>
+        <input type="button" id="fto" value="关注" style="font-size: 16px">
+        <input type="button" id="nfto" value="取消关注" style="font-size: 16px"></br></br>
+        <td>      根据话题查找相关问题<input type="text" id = "qundert">（输入话题号）    </td>
+        <input type="button" id="ttoq" value="提交" style="font-size: 16px"></br></br>
+        <td>      根据关键词查找相关问题<input type="text" id = "qunderk">（输入关键词）    </td>
+        <input type="button" id="ktoq" value="提交" style="font-size: 16px"></br></br>
+        <td>      回答问题<input type="text" id = "aunderq_id">（输入问题号）    </td>
+        <td>      你的答案<input type="text" id = "aunderq_ans">（输入答案）    </td>
+        <input type="button" id="qtoa" value="提交" style="font-size: 16px"></br></br>
+        <div id="topic_follow" style="font-size:18px" text-algin="position">
+            <p id = "ttable"></p>
+            <p id = "qtable"></p>
+            <p id = "mqtable"></p>
+            <p id = "atable"></p> 
+        </div>
+    <div id="page2" class="hide" style="font-size:18px" text-algin="position">
+        <div id="topic_table" class="hide" style="font-size:18px" text-algin="position">
+            <p id = "totable"></p>
+        </div>
+        <div id="ques_table" class="hide" style="font-size:18px" text-algin="position">
+            <p id = "qotable"></p>
+        </div>
+        <div id="kques_table" class="hide" style="font-size:18px" text-algin="position">
+            <p id = "kotable"></p>
+        </div>
+        <div id="ans_table" class="hide" style="font-size:18px" text-algin="position">
+            <p id = "antable"></p>
+        </div>
+    </div>
+    </div>
+
+
+    <script type="text/javascript" src="js/d3/d3.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src = "table.js"></script>
+    <script type="text/javascript">
+        var token;
+        var u_name;
+
+        document.getElementById('return_to_main').onclick = function(){
+            document.getElementById("userpage").className="show";
+            document.getElementById("page2").className="hide";
+
+            document.getElementById("topic_follow").className="show";
+            main_page(u_name,token)
+        }
+
+
+        document.getElementById('nfto').onclick = function(){
+            document.getElementById("topic_follow").setAttribute("class", "hide");
+            document.getElementById("page2").setAttribute("class", "show");
+            var id = document.getElementById("followtopic").value;
+            var id = document.getElementById("followtopic").value;
+            if(!checkword(id))
+                return
+            var a = JSON.stringify({
+                        'id':id,
+                        'token':token
+                    });
+                console.log(a)
+
+            $.ajax({
+                url: "http://localhost:7777/nftopic",
+                type: "post",
+                contentType: 'application/json; charset=UTF-8;',
+                data: a,
+                dataType:"json",
+                // processData:false,
+                //contentType:false,
+                //contentType:"multipart/form-data",
+                error: function(xhr, err){
+                    alert('请求失败，话题号无效')},
+                success: function (data) {      
+                    document.getElementById("followtopic").value="";                  
+                    if(data["success"]){
+                        alert("取消关注话题成功")
+                    }
+                    else{
+                        alert("取消关注话题失败")
+                        // document.getElementById("userpage").className="hide";
+                        // document.getElementById("login").className="show";
+                    }
+                }
+            })     
+        }
+
+
+        document.getElementById('fto').onclick = function(){
+            document.getElementById("topic_follow").setAttribute("class", "hide");
+            document.getElementById("page2").setAttribute("class", "show");
+            var id = document.getElementById("followtopic").value;
+            if(!checkword(id))
+                return
+            var a = JSON.stringify({
+                        'id':id,
+                        'token':token
+                    });
+                console.log(a)
+
+            $.ajax({
+                url: "http://localhost:7777/ftopic",
+                type: "post",
+                contentType: 'application/json; charset=UTF-8;',
+                data: a,
+                dataType:"json",
+                // processData:false,
+                //contentType:false,
+                //contentType:"multipart/form-data",
+                error: function(xhr, err){
+                    alert('请求失败，话题号无效')},
+                success: function (data) { 
+                    document.getElementById("followtopic").value="";                       
+                    if(data["success"]){
+                        alert("关注话题成功")
+                    }
+                    else{
+                        alert("关注话题失败")
+                        // document.getElementById("userpage").className="hide";
+                        // document.getElementById("login").className="show";
+                    }
+                }
+            })     
+        }
+
+
+
+        document.getElementById('qtoa').onclick = function(){
+            document.getElementById("topic_follow").setAttribute("class", "hide");
+            document.getElementById("page2").setAttribute("class", "show");
+            var id = document.getElementById("aunderq_id").value;
+            var ans = document.getElementById("aunderq_ans").value;
+            if(!checkword(id))
+                return
+            if(!checkword(ans))
+                return
+            var a = JSON.stringify({
+                        'id':id,
+                        'ans':ans,
+                        'token':token
+                    });
+                console.log(a)
+
+            $.ajax({
+                url: "http://localhost:7777/quforan",
+                type: "post",
+                contentType: 'application/json; charset=UTF-8;',
+                data: a,
+                dataType:"json",
+                // processData:false,
+                //contentType:false,
+                //contentType:"multipart/form-data",
+                error: function(xhr, err){
+                    alert('请求失败，问题号或答案无效')},
+                success: function (data) {                        
+                    if(data["success"]){
+                        alert("回答问题成功")
+                        document.getElementById("aunderq_id").value="";
+                        document.getElementById("aunderq_ans").value="";
+                    }
+                    else{
+                        alert("缺少权限")
+                        document.getElementById("userpage").className="hide";
+                        document.getElementById("login").className="show";
+                    }
+                }
+            })     
+        }
+
+        document.getElementById('ktoq').onclick = function(){
+            document.getElementById("topic_follow").setAttribute("class", "hide");
+            document.getElementById("page2").setAttribute("class", "show");
+            var searchseq = document.getElementById("qunderk").value;
+            if(!checkword(searchseq))
+                return
+            var a = JSON.stringify({
+                        'seq':searchseq,
+                        'token':token
+                    });
+                console.log(a)
+
+            $.ajax({
+                url: "http://localhost:7777/searchques",
+                type: "post",
+                contentType: 'application/json; charset=UTF-8;',
+                data: a,
+                dataType:"json",
+                // processData:false,
+                //contentType:false,
+                //contentType:"multipart/form-data",
+                error: function(xhr, err){
+                    alert('请求失败，搜索问题无效')},
+                success: function (data) {                        
+                    if(data["success"]){
+                        document.getElementById("kques_table").setAttribute("class", "show");
+                        // parent = document.getElementById("qotable")
+                        // child = document.getElementsByTag("table");
+                        // if(child.length>0)
+                        //     parent.removeChild(child)
+
+                        document.getElementById("qunderk").value="";
+                        console.log("question get")
+                        draw_table("kotable",data["ques"])
+                    }
+                    else{
+                        alert("搜索失败")
+                        // document.getElementById("userpage").className="hide";
+                        // document.getElementById("login").className="show";
+                    }
+                }
+            })     
+        }
+
+
+        document.getElementById('ttoq').onclick = function(){
+            document.getElementById("topic_follow").setAttribute("class", "hide");
+            document.getElementById("page2").setAttribute("class", "show");
+            var id = document.getElementById("qundert").value;
+            if(!checkword(id))
+                return
+            var a = JSON.stringify({
+                        'id':id,
+                        'token':token
+                    });
+                console.log(a)
+
+            $.ajax({
+                url: "http://localhost:7777/toforqu",
+                type: "post",
+                contentType: 'application/json; charset=UTF-8;',
+                data: a,
+                dataType:"json",
+                // processData:false,
+                //contentType:false,
+                //contentType:"multipart/form-data",
+                error: function(xhr, err){
+                    alert('请求失败，话题号无效')},
+                success: function (data) {                        
+                    if(data["success"]){
+                        document.getElementById("ques_table").setAttribute("class", "show");
+                        // parent = document.getElementById("qotable")
+                        // child = document.getElementsByTagName("table");
+                        // if(child.length>0)
+                        //     parent.removeChild(child)
+                        document.getElementById("qundert").value="";
+                        console.log("question get")
+                        draw_table("qotable",data["ques"])
+                    }
+                    else{
+                        alert("缺少权限")
+                        document.getElementById("userpage").className="hide";
+                        document.getElementById("login").className="show";
+                    }
+                }
+            })     
+        }
+
+
+        document.getElementById('gettopic').onclick = function(){
+            document.getElementById("topic_follow").setAttribute("class", "hide");
+            document.getElementById("page2").setAttribute("class", "show");
+            console.log(token);
+            var a = JSON.stringify({
+                        'token':token,
+                    });
+                console.log(a)
+
+            $.ajax({
+                url: "http://localhost:7777/foralltopic",
+                type: "post",
+                contentType: 'application/json; charset=UTF-8;',
+                data: a,
+                dataType:"json",
+                // processData:false,
+                //contentType:false,
+                //contentType:"multipart/form-data",
+                error: function(xhr, err){
+                    alert('请求失败，原因可能是：' + err + '！')},
+                success: function (data) {                        
+                    if(data["success"]){
+                        document.getElementById("topic_table").setAttribute("class", "show");
+                        console.log("topic get")
+                        draw_table("totable",data["topics"])
+                    }
+                    else{
+                        alert("缺少权限")
+                        document.getElementById("userpage").className="hide";
+                        document.getElementById("login").className="show";
+                    }
+                }
+                })     
+        }
+
+        // $.ajax({ url: "http://e4.pkuml.org:8080/login",
+        //             type: "post",dataType : "json", contentType: "application/json; charset=utf-8", data : JSON.stringify(data), success : function(result) { alert(result.success); 
+        // // result is an object which is created from the returned JSON 
+        //     }, });
+
+        document.getElementById('submit').onclick = function(){
+            var email = document.getElementById("email").value;
+            var user = document.getElementById("usr").value;
+            var pwd =document.getElementById("pwd").value;
+            var rightin=check(email,user,pwd);
+            //var token;
+            if(rightin)
+            {
+                // var a = new FormData();
+                // //使用append方法向空的FormData对象添加字段
+                // a.append('email',email);  
+                // a.append('usr',user); 
+                // a.append('pwd',pwd); 
+                var data = {"name":"John Doe"} 
+                var a = JSON.stringify({
+                        'email':email,
+                        'usr':user,
+                        'pwd':pwd
+                    });
+                console.log(a)
+
+                $.ajax({
+                    url: "http://localhost:7777/login",
+                    type: "post",
+                    contentType: 'application/json; charset=UTF-8;',
+                    data: a,
+                    dataType:"json",
+                    // processData:false,
+                    //contentType:false,
+                    //contentType:"multipart/form-data",
+                    error: function(xhr, err){
+                        alert('请求失败，原因可能是：' + err + '！')},
+                    success: function (data) {                        
+                        if(data["success"]){
+                            token=data["cookie"];
+                            u_name=data["user"];
+                            console.log("login success")
+                            document.getElementById("login").className="hide";
+                            main_page(data["user"], data["cookie"]);
+                        }
+                        else{
+                            alert(data["cookie"])
+                            document.getElementById("email").value="";
+                            document.getElementById("usr").value="";
+                            document.getElementById("pwd").value="";
+                        }
+                    }
+                })              
+            }
+            else
+            {
+                document.getElementById("email").value="";
+                document.getElementById("usr").value="";
+                document.getElementById("pwd").value="";
+            }
+
+        };
+        document.getElementById('needtosignup').onclick = function(){
+            document.getElementById("login").className="hide";
+            document.getElementById("signup").className="show";
+
+        }
+        document.getElementById('clear').onclick = function(){
+            document.getElementById("email").value="";
+            document.getElementById("usr").value="";
+            document.getElementById("pwd").value="";
+            document.getElementById("newemail").value="";
+            document.getElementById("newusr").value="";
+            document.getElementById("newpwd1").value="";
+            document.getElementById("newpwd2").value="";
+        };
+        document.getElementById('newsubmit').onclick = function(){
+            var newemail = document.getElementById("newemail").value;
+            var newuser = document.getElementById("newusr").value;
+            var pwd1 =document.getElementById("newpwd1").value;
+            var pwd2 =document.getElementById("newpwd2").value;
+            var samepwd = check_new(newemail,newuser, pwd1,pwd2);
+            if(samepwd){
+                //****************
+                //上传用户名和密码
+                //是否创建成功
+                //****************
+                var na = JSON.stringify({
+                        'email':newemail,
+                        'usr':newuser,
+                        'pwd':pwd1
+                    });
+                console.log(na)
+
+                $.ajax({
+                    url: "http://localhost:7777/signup",
+                    type: "post",
+                    contentType: 'application/json; charset=UTF-8;',
+                    data: na,
+                    dataType:"json",
+                    // processData:false,
+                    //contentType:false,
+                    //contentType:"multipart/form-data",
+                    error: function(xhr, err){
+                        alert('请求失败，原因可能是：' + err + '！')},
+                    success: function (data) {   
+                        console.log("place1")                     
+                        if(data["success"]){
+                            //alert("success!")
+                            document.getElementById("signup").className="hide";
+                            document.getElementById("login").className="show";
+                        }
+                        else{
+                            alert("Your email address or username have been used")
+                            document.getElementById("newemail").value="";
+                            document.getElementById("newusr").value="";
+                            document.getElementById("newpwd1").value="";
+                            document.getElementById("newpwd2").value="";
+                        }
+                    }
+                })     
+
+
+                //document.getElementById("signup").className="hide";
+            }
+            else{
+                document.getElementById("newemail").value="";
+                document.getElementById("newusr").value="";
+                document.getElementById("newpwd1").value="";
+                document.getElementById("newpwd2").value="";
+            }
+        };
+
+        function check(e,n,p){
+            if(e==null||e.length==0){
+                alert("邮箱不能为空");
+                return false;
+            }
+            if(n==null||n.length==0){
+                alert("用户名不能为空");
+                return false;
+            }
+            else if(p==null||p.length==0){
+                alert("密码不能为空");
+                return false;
+            }
+            else
+                return true;
+        }
+        function check_new(e,n,p1,p2){
+            if(e==null||e.length==0){
+                alert("邮箱不能为空");
+                return false;
+            }
+            else if(n==null||n.length==0){
+                alert("用户名不能为空");
+                return false;
+            }
+            else if(p1!=p2){
+                alert("两次密码必须输入一致");
+                return false;
+            }
+            else if(p1==null||p1.length==0||p2==null||p2.length==0){
+                alert("密码不能为空");
+                return false;
+            }
+            else
+                return true;
+        }
+
+        function main_page(username, token){
+            document.getElementById("userpage").className="show";
+            document.getElementById("topic_follow").setAttribute("class", "show");
+            document.getElementById("page2").setAttribute("class", "hide");
+            document.getElementById("_name_").innerHTML = "用户：" + username;
+
+            var t = JSON.stringify({
+                        'token':token
+                    });
+            console.log(t)
+
+            $.ajax({
+                url: "http://localhost:7777/main",
+                type: "post",
+                contentType: 'application/json; charset=UTF-8;',
+                data: t,
+                dataType:"json",
+                // processData:false,
+                //contentType:false,
+                //contentType:"multipart/form-data",
+                // error: function(xhr, err){
+                //     alert('请求失败，原因可能是：' + err + '！')},
+                success: function (data) {                        
+                    tf = data["tfollowed"]
+                    qf = data["qfollowed"]
+                    mqf = data["mq"]
+                    maf = data["ma"]
+                    draw_table("ttable",tf)
+                    draw_table("qtable",qf)
+                    draw_table("mqtable",mqf)
+                    draw_table("atable",maf)
+                }
+            })  
+
+        }
+
+    </script>
+
+</body>
+</html>

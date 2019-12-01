@@ -1,0 +1,24 @@
+body{
+    background-color: #FFF;
+    color: #000;
+}
+
+
+.hide{display:none;}
+
+.show{
+	text-align:center
+	font: 16px sans-serif;
+	display:inline;
+}
+
+
+
+.button{
+	font: 16px sans-serif;
+}
+
+#main h1{
+	font-family: KaiTi;
+	
+}
