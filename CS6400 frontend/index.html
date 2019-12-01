@@ -68,8 +68,8 @@
                       alert('search failed')},
                   success: function (data) {   
                       all_data_movie=copy(data);
-               console.log(all_data_movie);
-               localStorage.setItem("movie_data", JSON.stringify(all_data_movie));
+                      console.log(all_data_movie);
+                      localStorage.setItem("movie_data", JSON.stringify(all_data_movie));
                       window.location.href='movie.html';
                   }
               })                          
@@ -91,7 +91,7 @@
                       alert('search failed')},
                   success: function (data) {   
                       all_data_movie=copy(data);
-               localStorage.setItem("company_data", JSON.stringify(all_data_movie));
+                      localStorage.setItem("company_data", JSON.stringify(all_data_movie));
                       window.location.href='company.html';
                   }
               })                          
