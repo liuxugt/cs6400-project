@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="colorlib.com">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="s01">
+      <form>
+        <fieldset>
+          <legend>CS6400 G11 Team Project</legend>
+        </fieldset>
+        <!-- <div class="inner-form">
+          <div class="input-field first-wrap">
+            <input id="moviesearch" type="text" placeholder="Moive" />
+            <button class="input-field third-wrap" id="moviebutton" type="button">Search</button>
+          </br>
+          </div>
+          <div class="input-field second-wrap">
+            <input id="companysearch" type="text" placeholder="Company" />
+            <button class="input-field third-wrap" id="companybutton" type="button">Search</button>
+          </br>
+          </div>
+          <div class="input-field third-wrap">
+            <button class="btn-search" type="button">Search</button>
+          </div>
+        </div> -->
+        <div class="inner-form">
+          <div class="input-field first-wrap">
+            <input id="moviesearch" type="text" placeholder="Movie" />
+          </div>
+          <div class="input-field third-wrap">
+            <button class="btn-search" id="moviebutton" type="button">Search</button>
+          </div>
+        </div>
+        <div class="inner-form">
+          <div class="input-field first-wrap">
+            <input id="companysearch" type="text" placeholder="Company" />
+          </div>
+          <div class="input-field third-wrap">
+            <button class="btn-search" id="companybutton" type="button">Search</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+    <script type="text/javascript" src="js/d3/d3.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
+      document.getElementById('moviebutton').onclick = function(){
+        var movie_name=document.getElementById("moviesearch").value;
+        console.log(movie_name)
+        $.ajax({
+                  url: "http://localhost:8080/api/movies/title/"+movie_name,
+                  type: "post",
+                  contentType: 'application/json; charset=UTF-8;',
+                  //data: a,
+                  //dataType:"json",
+                  // processData:false,
+                  //contentType:false,
+                  //contentType:"multipart/form-data",
+                  error: function(xhr, err){
+                      alert('搜索失败')},
+                  success: function (data) {   
+                      all_data_movie=copy(data);                
+                      window.location.href='movie.html';
+                  }
+              })                          
+      }
+
+      document.getElementById('companybutton').onclick = function(){
+        var company_name=document.getElementById("companysearch").value;
+        console.log(movie_name)
+        $.ajax({
+                  url: "http://localhost:8080/api/company/name/"+company_name,
+                  type: "post",
+                  contentType: 'application/json; charset=UTF-8;',
+                  //data: a,
+                  //dataType:"json",
+                  // processData:false,
+                  //contentType:false,
+                  //contentType:"multipart/form-data",
+                  error: function(xhr, err){
+                      alert('搜索失败')},
+                  success: function (data) {   
+                      all_data_movie=copy(data);                
+                      window.location.href='company.html';
+                  }
+              })                          
+      }
+
+    </script>
+
+  </body>
+</html>

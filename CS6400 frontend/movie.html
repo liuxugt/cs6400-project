@@ -1,0 +1,138 @@
+<html>
+  <head>
+    <link href="css/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .my_text
+        {
+            font-family:    Arial, Helvetica, sans-serif;
+            font-size:      40px;
+            font-weight:    bold;
+        }
+    </style>
+  </head>
+  <body>
+    <br>
+    <div class="row">
+        <div class="column">1</div>
+        <div class="column">2</div>
+    </div>
+    <div class="container">
+      <!-- All dummy data should be replaced by clickable attributes that each leads to its corresponding visualization page -->
+      <div class="row">
+        <div class="col">
+          <div class="my_text">
+            Movie
+          </div>
+          <br>
+          <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Title</h5>
+              </div>
+              <p class="mb-1" id="movie_title"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Language</h5>
+              </div>
+              <p class="mb-1" id="movie_language"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Average Rating</h5>
+              </div>
+              <p class="mb-1" id="movie_average_rating"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Country</h5>
+              </div>
+              <p class="mb-1" id="movie_country"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Collection Name</h5>
+              </div>
+              <p class="mb-1" id="movie_collection_name"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Release Data</h5>
+              </div>
+              <p class="mb-1" id="movie_release_data"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Status</h5>
+              </div>
+              <p class="mb-1" id="movie_status"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Related Companies</h5>
+              </div>
+              <p class="mb-1" id="movie_company"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Related Casts</h5>
+              </div>
+              <p class="mb-1" id="movie_cast"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Related Directors</h5>
+              </div>
+              <p class="mb-1" id="movie_director"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Related Writers</h5>
+              </div>
+              <p class="mb-1" id="movie_writer"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Related Genres</h5>
+              </div>
+              <p class="mb-1" id="movie_genre"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Related Movies</h5>
+              </div>
+              <p class="mb-1" id="movie_movie"></p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="input-field third-wrap">
+      <button class="btn-search" id="returnbutton2" type="button">Return to Main Page</button>
+    </div>
+
+    <script type="text/javascript" src="js/d3/d3.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src = "get_item.js"></script>
+    <script type="text/javascript">
+      document.getElementById('movie_title').innerHTML=movie_title();
+      document.getElementById('movie_language').innerHTML=movie_language();
+      document.getElementById('movie_average_rating').innerHTML=movie_average_rating();
+      document.getElementById('movie_country').innerHTML=movie_country();
+      document.getElementById('movie_collection_name').innerHTML=movie_collection_name();
+      document.getElementById('movie_release_data').innerHTML=movie_release_data();
+      document.getElementById('movie_status').innerHTML=movie_status();
+      document.getElementById('movie_company').innerHTML=movie_company();
+      document.getElementById('movie_cast').innerHTML=movie_cast();
+      document.getElementById('movie_director').innerHTML=movie_director();
+      document.getElementById('movie_writer').innerHTML=movie_writer();
+      document.getElementById('movie_genre').innerHTML=movie_genre();
+      document.getElementById('movie_movie').innerHTML=movie_movie();
+      document.getElementById('returnbutton2').onclick = function(){
+        window.location.href='index.html';
+      }
+    </script>
+
+  </body>
+</html>

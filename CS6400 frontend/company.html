@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <link href="css/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .my_text
+        {
+            font-family:    Arial, Helvetica, sans-serif;
+            font-size:      40px;
+            font-weight:    bold;
+        }
+    </style>
+  </head>
+  <body>
+    <br>
+    <div class="row">
+        <div class="column">1</div>
+        <div class="column">2</div>
+    </div>
+    <div class="container">
+      <!-- All dummy data should be replaced by clickable attributes that each leads to its corresponding visualization page -->
+      <div class="row">
+        <div class="col">
+          <div class="my_text">
+            Company
+          </div>
+          <br>
+          <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Name</h5>
+              </div>
+              <p class="mb-1" id="comp_name"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Revenue</h5>
+              </div>
+              <p class="mb-1" id="comp_revenue"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Movie Count</h5>
+              </div>
+              <p class="mb-1" id="comp_movie_count"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Related Casts</h5>
+              </div>
+              <p class="mb-1" id="comp_cast"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Related Crews</h5>
+              </div>
+              <p class="mb-1" id="comp_crew"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Related Genres</h5>
+              </div>
+              <p class="mb-1" id="comp_genre"></p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">Related Movies</h5>
+                </div>
+                <p class="mb-1" id="comp_movie"></p>
+              </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">Related Companies</h5>
+                </div>
+                <p class="mb-1" id="comp_company"></p>
+              </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="input-field third-wrap">
+      <button class="btn-search" id="returnbutton" type="button">Return to Main Page</button>
+    </div>
+    <script type="text/javascript" src="js/d3/d3.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src = "get_item.js"></script>
+    <script type="text/javascript">
+      document.getElementById('comp_name').innerHTML=comp_name();
+      document.getElementById('comp_revenue').innerHTML=comp_revenue();
+      document.getElementById('comp_movie_count').innerHTML=comp_movie_count();
+      document.getElementById('comp_cast').innerHTML=comp_cast();
+      document.getElementById('comp_crew').innerHTML=comp_crew();
+      document.getElementById('comp_genre').innerHTML=comp_genre();
+      document.getElementById('comp_movie').innerHTML=comp_movie();
+      document.getElementById('comp_company').innerHTML=comp_company();
+      document.getElementById('returnbutton').onclick = function(){
+        window.location.href='index.html';
+      }
+    </script>
+
+  </body>
+</html>

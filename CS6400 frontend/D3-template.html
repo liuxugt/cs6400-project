@@ -1,0 +1,44 @@
+<!-- Data Visualization -->
+<!DOCTYPE html>
+<html lang="ko" class="example#">
+    
+    <head>
+        <meta charset="utf-8" />
+        <title>
+            example#
+        </title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    
+    <body>
+
+        <script src="d3.min.js">
+        </script>
+        <script>
+
+        !function() {
+        
+            function draw(data){
+                "use strict";
+                //badass visualization code goes here
+                d3
+                .select("body")
+                .append("ul")
+                    .selectAll("li")
+                    .data(data)
+                    .enter()
+                .append("li")
+                    .text(function (d){
+                        return d.name + ": " + d.status;
+                    });
+
+            }
+            
+            d3.json("service_status.json", draw);
+
+        }();
+        
+        </script>
+    </body>
+
+</html>
