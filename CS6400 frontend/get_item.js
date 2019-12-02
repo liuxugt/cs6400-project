@@ -102,7 +102,12 @@ function movie_genre()
 	var string="";
 	for(let item in all_data_movie['genres'])
 	{
+		var movieid=all_data_movie['id'];
+		//var contentid=0;
+		var genreid=all_data_movie['genres'][item]['id'];
+		string+='<a href="javascript:void(0);" onclick="draw_chart(movieid,genreid)">';
 		string+="<td>"+all_data_movie['genres'][item]['name']+" (average rating: "+all_data_movie['genres'][item]['average_rating']+", movie_number: "+all_data_movie['genres'][item]['movie_count']+")"+"</td></br>";
+		string+='</a>';
 	}
 	return string;
 }
@@ -181,4 +186,28 @@ function comp_company()
         string+="<td>"+ all_data_movie['companies'][item]['name']+" (revenue: "+ all_data_movie['companies'][item]['revenue']+", movie number"+ all_data_movie['companies'][item]['movie_count']+", reason: "+ all_data_movie['companies'][item]['reason']+")"+"</td></br>";
 	}
 	return string;
+}
+
+//vis 0 only
+function draw_chart(movie_id, genre_id){
+	$.ajax({
+                  url: "http://localhost:8080/api/movie/"+movie_id+"/0/genre/"+genre_id,
+                  type: "GET",
+                  crossDomain: true,
+                  error: function(xhr, err){
+                      alert('search failed')},
+                  success: function (data) {   
+                  		var movie_count=[];
+                  		var year=[];
+                      for(var i=0;i<data.length;++i)
+                      {
+                      	movie_count.push(data[i]["rating"]);
+                      	year.push(data[i]["split_element"]);
+                      }
+                      //draw_line_chart(movie_count,year);
+                      localStorage.setItem("movie_count", JSON.stringify(movie_count));
+                      localStorage.setItem("year", JSON.stringify(year));
+                      window.location.href='D3-template.html';
+                  }
+              })
 }

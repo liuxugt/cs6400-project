@@ -1,44 +1,20 @@
-<!-- Data Visualization -->
-<!DOCTYPE html>
-<html lang="ko" class="example#">
-    
-    <head>
-        <meta charset="utf-8" />
-        <title>
-            example#
-        </title>
-        <link rel="stylesheet" href="style.css" />
-    </head>
-    
-    <body>
-
-        <script src="d3.min.js">
-        </script>
-        <script>
-
-        !function() {
-        
-            function draw(data){
-                "use strict";
-                //badass visualization code goes here
-                d3
-                .select("body")
-                .append("ul")
-                    .selectAll("li")
-                    .data(data)
-                    .enter()
-                .append("li")
-                    .text(function (d){
-                        return d.name + ": " + d.status;
-                    });
-
-            }
-            
-            d3.json("service_status.json", draw);
-
-        }();
-        
-        </script>
-    </body>
-
+<html>
+  <head>
+    <link href="css/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .my_text
+        {
+            font-family:    Arial, Helvetica, sans-serif;
+            font-size:      40px;
+            font-weight:    bold;
+        }
+    </style>
+  </head>
+  <div id="visualization"></div>
+    <script type="text/javascript" src="js/d3/d3.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/d3/d3.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-3.2.1.js"></script>
+    <script type="text/javascript" src = "vis.js"></script>
 </html>
