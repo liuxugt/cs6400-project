@@ -1,4 +1,7 @@
 //vis 0
+d3.selectAll("#visualization>*").remove();
+
+
   var svg = d3.select('#visualization')
     .append('svg')
     .attr('width', 600)
@@ -55,6 +58,7 @@ bar_chart(xdata,ydata)
 
 // vis 1
 function bar_chart(xdata,ydata){
+d3.selectAll("#director-chart>*").remove();
 var width=960
 var height=600
 var marge = {top:60,bottom:60,left:60,right:60}
