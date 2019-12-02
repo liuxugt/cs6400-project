@@ -66,7 +66,7 @@
     </select>
 
     <select id="getGenreRelatedToMovie" resultMap="genreMovieMap">
-        SELECT g.id, g.name, AVG(vote_average) AS average_rating FROM genres AS g
+        SELECT g.id, g.name, AVG(vote_average) AS average_rating, count(*) AS movie_count FROM genres AS g
         JOIN movie_genre_relation as mgr ON mgr.genre_id = g.id
         JOIN movie_genre_relation as mgr2 ON mgr2.genre_id = g.id
         JOIN movies as m ON mgr2.movie_id = m.id

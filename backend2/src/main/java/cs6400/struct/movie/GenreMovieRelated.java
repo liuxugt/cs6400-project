@@ -25,7 +25,7 @@ public class GenreMovieRelated {
         this.movie_count = movie_count;
     }
 
-    public GenreMovieRelated(int id, String name, double average_rating, int movie_count, int voting_count) {
+    public GenreMovieRelated(int id, String name, double average_rating, int movie_count) {
         this.id = id;
         this.name = name;
         this.average_rating = average_rating;

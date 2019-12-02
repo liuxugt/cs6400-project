@@ -76,18 +76,18 @@ public class ApplicationController {
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/movie/{movie_id}/{content_id}/genre/{genre_name}")
-    public ResponseEntity<?> getHistogramOnMovie(@PathVariable("genre_name") String name, @PathVariable("content_id") int content_id, @PathVariable("movie_id") int movie_id){
-        List<HistogramElement> res = this.repository.getHistogram(name, movie_id, content_id);
+    @RequestMapping(method = RequestMethod.GET, value = "/api/movie/{movie_id}/{content_id}/genre/{genre_id}")
+    public ResponseEntity<?> getHistogramOnMovie(@PathVariable("genre_id") int genre_id, @PathVariable("content_id") int content_id, @PathVariable("movie_id") int movie_id){
+        List<HistogramElement> res = this.repository.getHistogram(genre_id, movie_id, content_id);
         if(res == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
-    @RequestMapping(method = RequestMethod.GET, value = "/api/company/{company_id}/{content_id}/genre/{genre_name}")
-    public ResponseEntity<?> getHistogramOnCompany(@PathVariable("company_id") int company_id, @PathVariable("content_id") int content_id, @PathVariable("genre_name") String name){
+    @RequestMapping(method = RequestMethod.GET, value = "/api/company/{company_id}/{content_id}/genre/{genre_id}")
+    public ResponseEntity<?> getHistogramOnCompany(@PathVariable("company_id") int company_id, @PathVariable("content_id") int content_id, @PathVariable("genre_id") int genre_id){
         content_id *= 2;
-        List<HistogramElement> res = this.repository.getHistogram(name, company_id, content_id);
+        List<HistogramElement> res = this.repository.getHistogram(genre_id, company_id, content_id);
         if(res == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

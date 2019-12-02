@@ -102,7 +102,12 @@ function movie_genre()
 	var string="";
 	for(let item in all_data_movie['genres'])
 	{
+		var movieid=all_data_movie['id'];
+		//var contentid=0;
+		var genreid=all_data_movie['genres'][item]['id'];
+		string+='<a href="javascript:void(0);" onclick="draw_chart(movieid, ' + item + ')">';
 		string+="<td>"+all_data_movie['genres'][item]['name']+" (average rating: "+all_data_movie['genres'][item]['average_rating']+", movie_number: "+all_data_movie['genres'][item]['movie_count']+")"+"</td></br>";
+		string+='</a>';
 	}
 	return string;
 }
@@ -112,7 +117,7 @@ function movie_movie()
 	var string="";
 	for(let item in all_data_movie['movies'])
 	{
-		string+="<td>"+all_data_movie['movies'][item]['title']+" (date: "+all_data_movie['movies'][item]['release_date']+", order rating: "+all_data_movie['movies'][item]['order_rating']+", average rating: "+all_data_movie['movies'][item]['average_rating']+", reason: "+item['reason']+")"+"</td></br>";
+		string+="<td>"+all_data_movie['movies'][item]['title']+" (date: "+all_data_movie['movies'][item]['release_date']+", order rating: "+all_data_movie['movies'][item]['order_rating']+", average rating: "+all_data_movie['movies'][item]['average_rating']+", reason: "+all_data_movie['movies'][item]['reason']+")"+"</td></br>";
 	}
 	return string;
 }
