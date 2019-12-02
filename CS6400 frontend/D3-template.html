@@ -13,11 +13,18 @@
   </head>
   <div id="visualization"></div>
   <div id="director-chart"></div>
+  <div class="input-field third-wrap">
+      <button class="btn-search" id="returnbutton3" type="button">Return to Main Page</button>
+  </div>
     <script type="text/javascript" src="js/d3/d3.min.js"></script>
     <script type="text/javascript" src="js/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="js/d3/d3.js"></script>
     <script type="text/javascript" src="js/jquery/jquery-3.2.1.js"></script>
     <script type="text/javascript" src = "vis.js"></script>
 <!--     <script type="text/javascript" src = "vis2.js"></script> -->
-    
+    <script type="text/javascript">
+    document.getElementById('returnbutton3').onclick = function(){
+        window.location.href='index.html';
+      }
+    </script>
 </html>

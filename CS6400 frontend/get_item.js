@@ -163,7 +163,14 @@ function comp_genre()
 	var string="";
 	for(let item in all_data_movie['genres'])
 	{
+		var companyid=all_data_movie['id'];
+		//var contentid=0;
+		var genreid=all_data_movie['genres'][item]['id'];
+		string+='<a href="javascript:void(0);" onclick="draw_chart_c(companyid, ' + item + ')">';
+		
 		string+="<td>"+all_data_movie['genres'][item]['name']+" (average rating: "+all_data_movie['genres'][item]['average_rating']+", movie_number: "+all_data_movie['genres'][item]['movie_count']+")"+"</td></br>";
+		
+		string+='</a>'
 	}
 	return string;
 }
