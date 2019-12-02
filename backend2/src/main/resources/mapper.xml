@@ -201,11 +201,13 @@
     </select>
 
     <select id="getCrewRelatedToCompany" resultMap="crewCompanyMap">
-        SELECT crew_rating.name AS name, crew_rating.id AS id, crew_rating.gender AS gender, crew_rating.job AS job, crew_rating.rating AS order_rating, COUNT(*) AS movie_count, AVG(movies.vote_average) AS average_rating
+        SELECT crew_rating.name AS name, crew_rating.id AS id, crew_rating.gender AS gender, crew_rating.job AS job,
+        crew_rating.rating AS order_rating, COUNT(*) AS movie_count, AVG(movies.vote_average) AS average_rating
         FROM (
             SELECT close_crew.crew_name AS name, close_crew.id AS id, close_crew.gender AS gender, close_crew.job AS job, SUM(close_crew.rating) AS rating
             FROM (
-                SELECT crews.name AS crew_name, crews.gender AS gender, crews.id AS id, genres.name AS genre_name, temp.company_genre_count AS company_genre_count, mcr.job AS job, count(*) AS crew_genre_count,
+                SELECT crews.name AS crew_name, crews.gender AS gender, crews.id AS id, genres.name AS genre_name,
+                temp.company_genre_count AS company_genre_count, mcr.job AS job, count(*) AS crew_genre_count,
                 temp.company_genre_count * count(*) AS rating FROM crews
                 JOIN movie_crew_relation AS mcr ON mcr.crew_id = crews.id
                 JOIN movie_genre_relation AS mgr ON mgr.movie_id = mcr.movie_id
