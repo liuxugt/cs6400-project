@@ -367,7 +367,7 @@
         WHERE mgr.genre_id = #{id} and substring_index(movies.release_date, "-", 1) >= 2010
         GROUP BY participate.bool, split_element, c1.id
         ORDER BY rating DESC
-        LIMIT 20
+        LIMIT 10
     </select>
 
     <select id="getGenre" resultMap="genreMap">
