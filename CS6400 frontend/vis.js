@@ -123,7 +123,7 @@ var format=d3.format('.2f');
             (xScale.step()-rectPadding)/2;
           })
           .attr("dy",0)
-          .attr("font-size",10)
+          .attr("font-size",16)
           .text(function(d){
             console.log(d)
             return format(d);
