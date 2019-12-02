@@ -15,6 +15,8 @@
     <resultMap id="castCompanyMap" type="cast_company" autoMapping="true" />
     <resultMap id="companyCompanyMap" type="company_company" autoMapping="true" />
     <resultMap id="genreCompanyMap" type="genre_company" autoMapping="true" />
+    <resultMap id="genreMap" type="genre" autoMapping="true"/>
+    <resultMap id="histogramMap" type="histogram" autoMapping="true"/>
 
     <!--start the queries on movies-->
     <select id="getAllMovies" resultMap="movieMap">
@@ -240,5 +242,47 @@
             JOIN subordinate AS sub ON sub.parent_id = c2.id
         )
         SELECT id, name from subordinate;
+    </select>
+
+
+    <!--For drawing the histogram-->
+    <select id = "getHistogramByYear" resultMap="histogramMap">
+        select count(*) AS rating, substring_index(release_date, "-", 1) AS split_element, AVG(vote_average) AS average_rating
+        FROM movies
+        JOIN movie_genre_relation ON movie_genre_relation.movie_id = movies.id
+        WHERE substring_index(release_date, "-", 1) >= 2000 and movie_genre_relation.genre_id = #{id} and movies.status = "Released"
+        GROUP BY substring_index(release_date, "-", 1)
+        ORDER BY split_element ASC;
+    </select>
+    <select id = "getHistogramByDirectorOnMovie" resultMap="histogramMap">
+        select SUM(movies.popularity) + ifnull(participate.bool, 0) * 5000 AS rating, c1.name AS split_element, AVG(vote_average) AS average_rating FROM crews AS c1
+        JOIN movie_crew_relation AS mcr ON mcr.crew_id = c1.id AND mcr.job = "Director"
+        JOIN movies ON mcr.movie_id = movies.id
+        JOIN movie_genre_relation AS mgr ON mgr.movie_id = movies.id
+        LEFT JOIN (
+            SELECT count(*) AS bool, crew_id FROM movie_crew_relation WHERE movie_id = #{movie_id} AND job = "Director" GROUP BY id
+        ) AS participate ON participate.crew_id = c1.id
+        WHERE mgr.genre_id = #{id}
+        GROUP BY participate.bool, split_element, c1.id
+        ORDER BY rating DESC
+        LIMIT 20
+    </select>
+    <select id="getHistogramByDirectorOnCompany" resultMap="histogramMap">
+        select SUM(movies.popularity) + ifnull(participate.bool, 0) * 20 AS rating, c1.name AS split_element, AVG(vote_average) AS average_rating from crews
+        JOIN movie_crew_relation AS mcr ON mcr.crew_id = c1.id AND mcr.job = "Director"
+        JOIN movies ON mcr.movie_id = movies.id
+        LEFT JOIN(
+            SELECT count(*) AS bool, movie_crew_relation.crew_id AS crew_id FROM movie_crew_relation
+            JOIN movie_company_relation ON movie_crew_relation.movie_id = movie_company_relation.movie_id
+            WHERE movie_company_relation = #{company_id} AND job = "Director" GROUP
+        ) AS participate ON participate.crew_id = c1.id
+        WHERE mgr.genre_id = #{id}
+        GROUP BY participate.bool, split_element, c1.id
+        ORDER BY rating DESC
+        LIMIT 20
+    </select>
+
+    <select id="getGenre" resultMap="genreMap">
+        select name, id from genres where name = #{name}
     </select>
 </mapper>

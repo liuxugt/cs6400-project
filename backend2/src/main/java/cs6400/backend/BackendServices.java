@@ -5,6 +5,8 @@ import cs6400.database.DatabaseSqlSessionFactory;
 import cs6400.struct.company.Company;
 import cs6400.struct.company.CompanyCompanyRelated;
 import cs6400.struct.company.CompanyResponse;
+import cs6400.struct.genre.HistogramElement;
+import cs6400.struct.genre.genre;
 import cs6400.struct.movie.Movie;
 import cs6400.struct.movie.MovieMovieRelated;
 import cs6400.struct.movie.MovieResponse;
@@ -120,4 +122,17 @@ public class BackendServices {
         return response;
     }
 
+    public List<HistogramElement> getHistogramByYear(String name){
+        genre temp = dataManager.getGenre(name);
+        return dataManager.getHistogramByYear(temp.getId());
+    }
+    public List<HistogramElement> getHistogramByDirectorOnCompany(String name, int company_id){
+        genre temp = dataManager.getGenre(name);
+        return dataManager.getHistogramByDirectorOnCompany(company_id, temp.getId());
+    }
+
+    public List<HistogramElement> getHistogramByDirectorOnMovie(String name, int movie_id){
+        genre temp = dataManager.getGenre(name);
+        return dataManager.getHistogramByDirectorOnMovie(movie_id, temp.getId());
+    }
 }

@@ -1,5 +1,6 @@
 package cs6400.backend;
 
+import cs6400.struct.genre.HistogramElement;
 import cs6400.struct.movie.Movie;
 import cs6400.struct.movie.MovieResponse;
 import cs6400.struct.company.CompanyResponse;
@@ -73,8 +74,21 @@ public class ApplicationController {
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/visualization/{genre}/{content_id}")
-    public ResponseEntity<?> getPredictedGenreContent(@PathVariable("genre") String genre, @PathVariable("content_id") int id){
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    @RequestMapping(method = RequestMethod.GET, value = "/api/movie/{movie_id}/{content_id}/genre/{genre_name}")
+    public ResponseEntity<?> getHistogramOnMovie(@PathVariable("genre_name") String name, @PathVariable("content_id") int content_id, @PathVariable("movie_id") int movie_id){
+        List<HistogramElement> res = this.repository.getHistogram(name, movie_id, content_id);
+        if(res == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
+    }
+    @RequestMapping(method = RequestMethod.GET, value = "/api/company/{company_id}/{content_id}/genre/{genre_name}")
+    public ResponseEntity<?> getHistogramOnCompany(@PathVariable("company_id") int company_id, @PathVariable("content_id") int content_id, @PathVariable("genre_name") String name){
+        content_id *= 2;
+        List<HistogramElement> res = this.repository.getHistogram(name, company_id, content_id);
+        if(res == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 }

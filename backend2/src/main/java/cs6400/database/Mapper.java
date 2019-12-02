@@ -1,6 +1,8 @@
 package cs6400.database;
 
 import cs6400.struct.company.*;
+import cs6400.struct.genre.HistogramElement;
+import cs6400.struct.genre.genre;
 import cs6400.struct.movie.*;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,4 +33,9 @@ public interface Mapper {
     public List<CastCompanyRelated> getCastRelatedToCompany(@Param("id") int id);
     public List<MovieCompanyRelated> getMovieRelatedToCompany(@Param("id") int id);
     public List<GenreCompanyRelated> getGenreRelatedToCompany(@Param("id") int id, @Param("limit") int limit);
+
+    public List<HistogramElement> getHistogramByYear(@Param("id") int id);
+    public List<HistogramElement> getHistogramByDirectorOnMovie(@Param("movie_id") int movie_id, @Param("id") int id);
+    public List<HistogramElement> getHistogramByDirectorOnCompany(@Param("company_id") int company_id, @Param("id") int id);
+    public genre getGenre(@Param("name") String name);
 }

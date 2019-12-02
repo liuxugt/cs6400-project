@@ -1,6 +1,8 @@
 package cs6400.database;
 
 import cs6400.struct.company.*;
+import cs6400.struct.genre.HistogramElement;
+import cs6400.struct.genre.genre;
 import cs6400.struct.movie.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -201,4 +203,44 @@ public class DataManager {
             sqlSession.close();
         }
     }
+
+    public List<HistogramElement> getHistogramByYear(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getHistogramByYear(id);
+        } finally{
+            sqlSession.close();
+        }
+    }
+    public List<HistogramElement> getHistogramByDirectorOnMovie(int movie_id, int id){
+
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getHistogramByDirectorOnMovie(movie_id, id);
+        } finally{
+            sqlSession.close();
+        }
+    }
+    public List<HistogramElement> getHistogramByDirectorOnCompany(int company_id, int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getHistogramByDirectorOnCompany(company_id, id);
+        } finally{
+            sqlSession.close();
+        }
+    }
+
+    public genre getGenre(String name){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getGenre(name);
+        } finally{
+            sqlSession.close();
+        }
+    }
+
 }
