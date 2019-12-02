@@ -109,7 +109,7 @@ var g = svg.append("g")
           return height-marge.top-marge.bottom-yScale(d);
         })
         .attr("fill","steelblue");
-      
+var format=d3.format('.2f');   
       gs.append("text")
         .attr("x",function(d,i){
           console.log(xScale(i)+rectPadding/2);
@@ -121,10 +121,10 @@ var g = svg.append("g")
           .attr("dx",function(){
             (xScale.step()-rectPadding)/2;
           })
-          .attr("dy",20)
+          .attr("dy",0)
           .text(function(d){
             console.log(d)
-            return d;
+            return format(d);
           })
 }
 

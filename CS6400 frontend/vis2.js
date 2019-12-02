@@ -40,8 +40,7 @@ var g = svg.append("g")
     		.enter()
     		.append("g");
     	
-    	
-    	
+var format=d3.format('.2f');
     	gs.append("rect")
     		.attr("x",function(d,i){
     			return xScale(i)+rectPadding/2;
@@ -68,10 +67,10 @@ var g = svg.append("g")
         	.attr("dx",function(){
         		(xScale.step()-rectPadding)/2;
         	})
-        	.attr("dy",20)
+        	.attr("dy",0)
         	.text(function(d){
         		console.log(d)
-        		return d;
+        		return format(d);
         	})
 
 
