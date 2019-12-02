@@ -1,15 +1,15 @@
 // vis 1
 function bar_chart(xdata,ydata){
 
-	var width=960
-	var height=600
-	var marge = {top:60,bottom:60,left:60,right:60}
-	var rectPadding = 20;
-	 var svg = d3.select('#director-chart')
-	    .append('svg')
-	    .attr('width', width)
-	    .attr('height', height);
-	var g = svg.append("g")
+var width=960
+var height=600
+var marge = {top:60,bottom:60,left:60,right:60}
+var rectPadding = 20;
+ var svg = d3.select('#director-chart')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height);
+var g = svg.append("g")
     		.attr("transform","translate("+marge.top+","+marge.left+")");
 
 
