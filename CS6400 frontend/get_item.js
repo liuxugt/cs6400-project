@@ -117,7 +117,7 @@ function movie_movie()
 	var string="";
 	for(let item in all_data_movie['movies'])
 	{
-		string+="<td>"+all_data_movie['movies'][item]['title']+" (date: "+all_data_movie['movies'][item]['release_date']+", order rating: "+all_data_movie['movies'][item]['order_rating']+", average rating: "+all_data_movie['movies'][item]['average_rating']+", reason: "+item['reason']+")"+"</td></br>";
+		string+="<td>"+all_data_movie['movies'][item]['title']+" (date: "+all_data_movie['movies'][item]['release_date']+", order rating: "+all_data_movie['movies'][item]['order_rating']+", average rating: "+all_data_movie['movies'][item]['average_rating']+", reason: "+all_data_movie['movies'][item]['reason']+")"+"</td></br>";
 	}
 	return string;
 }
