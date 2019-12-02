@@ -47,10 +47,11 @@
     .datum(data)
     .attr('d',line)
 
-xdata=JSON.parse(localStorage.getItem("director"));
-ydata=JSON.parse(localStorage.getItem("movie_count_2"));
-bar_chart(xdata,ydata)
 
+var xdata=JSON.parse(localStorage.getItem("director"));
+var ydata=JSON.parse(localStorage.getItem("movie_count_2"));
+console.log(ydata)
+bar_chart(xdata,ydata)
 
 // vis 1
 function bar_chart(xdata,ydata){
