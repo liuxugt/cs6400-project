@@ -60,7 +60,7 @@
     </select>
     <select id="getCastRelatedToMovie" resultMap="castMovieMap">
         SELECT c.id, c.name, c.gender, mcr.characters FROM crews AS c
-        JOIN movie_cast_relation as mcr ON mcr.cast_id = c.id
+        JOIN movie_cast_relation as mcr ON mcr.crew_id = c.id
         where mcr.movie_id = #{id}
         limit 10
     </select>
@@ -109,6 +109,45 @@
         limit #{limit}
     </select>
 
+    <select id="getSimilarMovieWithCrewCast" resultMap="movieMovieMap">
+        WITH match_director(num, movie_id) AS(
+            SELECT count(*), movie_id FROM movie_crew_relation AS mcr1
+            JOIN (
+                SELECT crew_id FROM movie_crew_relation WHERE movie_crew_relation.movie_id = #{id} and movie_crew_relation.job = "Director"
+                LIMIT 5
+            ) AS temp ON mcr1.crew_id = temp.crew_id
+            WHERE mcr1.movie_id <![CDATA[ <> ]]> #{id} AND mcr1.job = "Director"
+            GROUP BY movie_id
+        ),
+        match_writer(num, movie_id) AS (
+            SELECT count(*), movie_id FROM movie_crew_relation AS mcr1
+            JOIN (
+                SELECT crew_id FROM movie_crew_relation WHERE movie_crew_relation.movie_id = #{id} and movie_crew_relation.job = "Screenplay"
+                LIMIT 5
+            ) AS temp ON mcr1.crew_id = temp.crew_id
+            WHERE mcr1.movie_id <![CDATA[ <> ]]> #{id} AND mcr1.job = "Screenplay"
+            GROUP BY movie_id
+        ),
+        match_cast(num, movie_id) AS(
+            SELECT count(*), movie_id FROM movie_cast_relation AS mca1
+            JOIN (
+                SELECT crew_id FROM movie_cast_relation WHERE movie_cast_relation.movie_id = #{id}
+                ORDER BY cast_order ASC LIMIT 10
+            ) AS temp ON mca1.crew_id = temp.crew_id
+            WHERE mca1.movie_id <![CDATA[ <> ]]> #{id}
+            GROUP BY movie_id
+            ORDER BY count(*) DESC
+        )
+        SELECT m.id, m.title, m.release_date, ifnull(md.num, 0) + ifnull(mw.num, 0) + ifnull(mc.num, 0) AS order_rating, m.vote_average AS average_rating FROM movies AS m
+        LEFT JOIN match_director AS md ON md.movie_id = m.id
+        LEFT JOIN match_writer AS mw ON mw.movie_id = m.id
+        LEFT JOIN match_cast AS mc ON mc.movie_id = m.id
+        WHERE m.id not in (
+            SELECT id FROM movies WHERE movies.belongs_to_collection_id = ifnull(m.belongs_to_collection_id, 300000)
+        )
+        ORDER BY order_rating DESC
+        LIMIT 5;
+    </select>
 
     <!--start the query on companies-->
     <select id="getCompanyById" resultMap="companyMap">
@@ -134,7 +173,7 @@
             FROM (
                 SELECT crews.name AS crew_name, crews.gender AS gender, crews.id AS id, genres.name AS genre_name, temp.company_genre_count AS company_genre_count, count(*) AS crew_genre_count,
                 temp.company_genre_count * count(*) AS rating FROM crews
-                JOIN movie_cast_relation AS mcr ON mcr.cast_id = crews.id
+                JOIN movie_cast_relation AS mcr ON mcr.crew_id = crews.id
                 JOIN movie_genre_relation AS mgr ON mgr.movie_id = mcr.movie_id
                 JOIN genres ON genres.id = mgr.genre_id
                 JOIN movie_company_relation ON mgr.movie_id = movie_company_relation.movie_id
@@ -152,7 +191,7 @@
             GROUP BY name, close_cast.id, gender
             ORDER BY SUM(close_cast.rating) DESC
             LIMIT 10) AS cast_rating
-        JOIN movie_cast_relation ON movie_cast_relation.cast_id = cast_rating.id
+        JOIN movie_cast_relation ON movie_cast_relation.crew_id = cast_rating.id
         JOIN movies ON movies.id = movie_cast_relation.movie_id
         JOIN movie_company_relation ON movies.id = movie_company_relation.movie_id
         where movie_company_relation.company_id = #{id}
@@ -211,6 +250,7 @@
         JOIN movie_company_relation AS mcr ON mcr.movie_id = m.id
         WHERE mcr.company_id = #{id} and m.status = "Released"
         ORDER BY m.popularity
+        LIMIT 10
     </select>
 
 
@@ -226,7 +266,10 @@
             LEFT OUTER JOIN parent_company AS cc2 ON cc2.company_id = c2.id
             JOIN subordinate AS sub ON cc2.parent_id = sub.id
         )
-        SELECT id, name from subordinate;
+        SELECT subordinate.id, subordinate.name, 1, SUM(movies.revenue) AS revenue, count(*) AS movie_count from subordinate
+        JOIN movie_company_relation AS mco ON mco.company_id = subordinate.id
+        JOIN movies ON mco.movie_id = movies.id
+        GROUP BY subordinate.id, subordinate.name;
     </select>
 
     <select id = "getParentCompany" resultMap="companyCompanyMap">
@@ -244,6 +287,51 @@
         SELECT id, name from subordinate;
     </select>
 
+    <select id="getSimilarCompany" resultMap="companyCompanyMap">
+        WITH recursive subordinate AS (
+            SELECT c.name, c.id, cc.parent_id FROM companies AS c
+            LEFT OUTER JOIN parent_company AS cc ON cc.company_id = c.id
+            WHERE c.id = #{parent_id}
+
+            UNION ALL
+
+            SELECT c2.name, c2.id, cc2.parent_id FROM companies AS c2
+            LEFT OUTER JOIN parent_company AS cc2 ON cc2.company_id = c2.id
+            JOIN subordinate AS sub ON cc2.parent_id = sub.id
+        ),
+        genre_count(num, genre_id) AS(
+            SELECT count(*), genres.id FROM genres
+            JOIN movie_genre_relation AS mgr ON mgr.genre_id = genres.id
+            JOIN movie_company_relation AS mco ON mco.movie_id = mgr.movie_id
+            RIGHT JOIN subordinate ON subordinate.id = mco.company_id
+            GROUP BY genres.id
+            ORDER BY count(*) DESC
+            LIMIT 5
+        )
+        SELECT qualified_company.id, qualified_company.name, qualified_company.genre_count AS order_rating, SUM(movies.revenue) AS revenue, count(*) AS movie_count FROM (
+            SELECT company_genre.id, company_genre.name, count(*) AS genre_count FROM (
+                SELECT companies.id AS id, companies.name AS name , mgr.genre_id AS genre_id,
+                    @company_rank := IF(@current_company = companies.name, @company_rank + 1, 1) AS company_rank,
+                    @current_company := companies.name
+                FROM companies
+                JOIN movie_company_relation AS mco ON companies.id = mco.company_id
+                JOIN movie_genre_relation AS mgr ON mgr.movie_id = mco.movie_id
+                WHERE companies.id NOT IN (
+                SELECT id FROM subordinate
+                )
+                GROUP BY companies.id, companies.name, genre_id
+                ORDER BY count(*) DESC
+                ) AS company_genre
+            WHERE company_rank &lt;= 3
+            GROUP BY id, name
+            ORDER BY genre_count DESC
+            ) AS qualified_company
+        JOIN movie_company_relation AS mco ON mco.company_id = qualified_company.id
+        JOIN movies ON mco.movie_id = movies.id
+        GROUP BY qualified_company.id, qualified_company.name
+        ORDER BY qualified_company.genre_count DESC, SUM(movies.revenue) DESC
+        LIMIT 10
+    </select>
 
     <!--For drawing the histogram-->
     <select id = "getHistogramByYear" resultMap="histogramMap">
@@ -262,13 +350,13 @@
         LEFT JOIN (
             SELECT count(*) AS bool, crew_id FROM movie_crew_relation WHERE movie_id = #{movie_id} AND job = "Director" GROUP BY id
         ) AS participate ON participate.crew_id = c1.id
-        WHERE mgr.genre_id = #{id}
+        WHERE mgr.genre_id = #{id} and substring_index(movies.release_date, "-", 1) >= 2010
         GROUP BY participate.bool, split_element, c1.id
         ORDER BY rating DESC
         LIMIT 20
     </select>
     <select id="getHistogramByDirectorOnCompany" resultMap="histogramMap">
-        select SUM(movies.popularity) + ifnull(participate.bool, 0) * 20 AS rating, c1.name AS split_element, AVG(vote_average) AS average_rating from crews
+        select SUM(movies.popularity) + ifnull(participate.bool, 0) * 200 AS rating, c1.name AS split_element, AVG(vote_average) AS average_rating from crews
         JOIN movie_crew_relation AS mcr ON mcr.crew_id = c1.id AND mcr.job = "Director"
         JOIN movies ON mcr.movie_id = movies.id
         LEFT JOIN(
@@ -276,7 +364,7 @@
             JOIN movie_company_relation ON movie_crew_relation.movie_id = movie_company_relation.movie_id
             WHERE movie_company_relation = #{company_id} AND job = "Director" GROUP
         ) AS participate ON participate.crew_id = c1.id
-        WHERE mgr.genre_id = #{id}
+        WHERE mgr.genre_id = #{id} and substring_index(movies.release_date, "-", 1) >= 2010
         GROUP BY participate.bool, split_element, c1.id
         ORDER BY rating DESC
         LIMIT 20

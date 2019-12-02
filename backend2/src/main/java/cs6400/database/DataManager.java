@@ -107,6 +107,16 @@ public class DataManager {
         }
     }
 
+    public List<MovieMovieRelated> getSimilarMovieWithCrewCast(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getSimilarMovieWithCrewCast(id);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
     //Start the company API queries
     public Company getCompanyByName(String name){
         SqlSession sqlSession = factory.openSession();
@@ -162,7 +172,7 @@ public class DataManager {
         }
     }
 
-    public List<CompanyCompanyRelated> getCompanyRelatedToCompany(int id){
+    public List<CompanyCompanyRelated> getSimilarCompany(int id){
         SqlSession sqlSession = factory.openSession();
         try{
             Mapper mapper = sqlSession.getMapper(Mapper.class);

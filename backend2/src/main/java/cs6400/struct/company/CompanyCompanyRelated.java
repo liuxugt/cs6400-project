@@ -5,6 +5,16 @@ public class CompanyCompanyRelated {
     String name;
     long revenue;
     int movie_count;
+    int order_rating;
+
+    public int getOrder_rating() {
+        return order_rating;
+    }
+
+    public void setOrder_rating(int order_rating) {
+        this.order_rating = order_rating;
+    }
+
     String reason = null;
 
     public String getReason() { return reason; }
@@ -18,9 +28,10 @@ public class CompanyCompanyRelated {
     public int getMovie_count() { return movie_count; }
     public void setMovie_count(int movie_count) { this.movie_count = movie_count; }
 
-    public CompanyCompanyRelated(int id, String name, long revenue, int movie_count) {
+    public CompanyCompanyRelated(int id, String name, int order_rating, long revenue, int movie_count) {
         this.id = id;
         this.name = name;
+        this.order_rating = order_rating;
         this.revenue = revenue;
         this.movie_count = movie_count;
     }
