@@ -215,12 +215,12 @@
                     SELECT mgr.genre_id AS genres_id, count(*) AS company_genre_count
                     FROM movie_genre_relation AS mgr
                     JOIN movie_company_relation AS mcr ON mgr.movie_id = mcr.movie_id
-                    WHERE mcr.company_id = 6194
+                    WHERE mcr.company_id = #{id}
                     GROUP BY mgr.genre_id
                     )
                 AS temp
                 ON genres.id = genres_id
-                WHERE movie_company_relation.company_id = 6194 AND mcr.job = "Director"
+                WHERE movie_company_relation.company_id = #{id} AND mcr.job = #{job}
                 GROUP BY crew_name, gender, id, genre_name, company_genre_count, mcr.job
                 )
             AS close_crew
@@ -229,7 +229,7 @@
         JOIN movie_crew_relation ON movie_crew_relation.crew_id = crew_rating.id
         JOIN movies ON movies.id = movie_crew_relation.movie_id
         JOIN movie_company_relation ON movies.id = movie_company_relation.movie_id
-        where movie_company_relation.company_id = 6194 and movie_crew_relation.job = "Director"
+        where movie_company_relation.company_id = #{id} and movie_crew_relation.job = #{job}
         GROUP BY name, crew_rating.id, crew_rating.gender, order_rating, crew_rating.job
         ORDER BY order_rating DESC
         LIMIT 10

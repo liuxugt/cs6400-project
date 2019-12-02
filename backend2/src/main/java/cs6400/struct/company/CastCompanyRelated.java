@@ -3,16 +3,26 @@ package cs6400.struct.company;
 public class CastCompanyRelated {
     private String name;
     private int id;
+    private int gender;
     private double order_rating;
     private int movie_count;
     private double average_rating;
 
-    public CastCompanyRelated(String name, int id, double order_rating, int movie_count, double average_rating) {
+    public CastCompanyRelated(String name, int id,int gender, double order_rating, int movie_count, double average_rating) {
         this.name = name;
         this.id = id;
+        this.gender = gender;
         this.order_rating = order_rating;
         this.movie_count = movie_count;
         this.average_rating = average_rating;
+    }
+
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
     }
 
     public String getName() {
