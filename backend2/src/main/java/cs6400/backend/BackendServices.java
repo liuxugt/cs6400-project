@@ -5,6 +5,8 @@ import cs6400.database.DatabaseSqlSessionFactory;
 import cs6400.struct.company.Company;
 import cs6400.struct.company.CompanyCompanyRelated;
 import cs6400.struct.company.CompanyResponse;
+import cs6400.struct.genre.HistogramElement;
+import cs6400.struct.genre.genre;
 import cs6400.struct.movie.Movie;
 import cs6400.struct.movie.MovieMovieRelated;
 import cs6400.struct.movie.MovieResponse;
@@ -20,8 +22,8 @@ public class BackendServices {
     final int genre_capacity = 10;
     final String job_dire = "Director";
     final String job_write = "Screenplay";
-    final String[] sample_reason_company = new String[] {"subordinate or parent", "similar recent genres"};
-    final String[] sample_reason_movie = new String[] {"same collection", "similar genre and companies", "similar genres with close release"};
+    final String[] sample_reason_company = new String[] {"subordinate or parent", "similar strength genres"};
+    final String[] sample_reason_movie = new String[] {"same collection", "similar genre and companies", "similar director screenplay and actors"};
     public BackendServices(){
         try{
             DatabaseSqlSessionFactory databaseSqlSessionFactory = new DatabaseSqlSessionFactory();
@@ -48,6 +50,9 @@ public class BackendServices {
         int id = basic_info.getId();
         System.out.println(title + " pass null checking");
         MovieResponse response = new MovieResponse(basic_info);
+        if(!basic_info.getStatus().equals("Released")){
+            return response;
+        }
         response.setCompanies(dataManager.getCompaniesRelatedToMovie(id));
         response.setGenres(dataManager.getGenresRelatedToMovie(id));
         response.setDirectors(dataManager.getCrewRelatedToMovie(id, job_dire));
@@ -85,15 +90,18 @@ public class BackendServices {
             }
         });
         response.addAllMovie(similarMovie);
-        if(!basic_info.getStatus().equals("Released")){
-            return response;
+        List<MovieMovieRelated> crewCast = dataManager.getSimilarMovieWithCrewCast(id);
+        for(int i = 0; i < crewCast.size(); i++){
+            crewCast.get(i).setReason(sample_reason_movie[2]);
         }
+        response.addAllMovie(crewCast);
         return response;
     }
 
     public Movie getTestMovie(){
         return dataManager.getMovieByTitle("Moana");
     }
+
     public CompanyResponse getCompanyResponseByName(String name){
         System.out.println(name + " in service");
         Company basic_info = dataManager.getCompanyByName(name);
@@ -116,8 +124,26 @@ public class BackendServices {
                 response.addCompany(subordinate.get(i));
             }
         }
+        List<CompanyCompanyRelated> similarCompany = dataManager.getSimilarCompany(parent.get(parent.size() - 1).getId());
+        for(int i = 0; i < similarCompany.size(); i++){
+            similarCompany.get(i).setReason(sample_reason_company[1]);
+        }
+        response.addAllCompany(similarCompany);
 
         return response;
     }
 
+    public List<HistogramElement> getHistogramByYear(String name){
+        genre temp = dataManager.getGenre(name);
+        return dataManager.getHistogramByYear(temp.getId());
+    }
+    public List<HistogramElement> getHistogramByDirectorOnCompany(String name, int company_id){
+        genre temp = dataManager.getGenre(name);
+        return dataManager.getHistogramByDirectorOnCompany(company_id, temp.getId());
+    }
+
+    public List<HistogramElement> getHistogramByDirectorOnMovie(String name, int movie_id){
+        genre temp = dataManager.getGenre(name);
+        return dataManager.getHistogramByDirectorOnMovie(movie_id, temp.getId());
+    }
 }

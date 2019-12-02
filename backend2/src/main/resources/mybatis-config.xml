@@ -32,6 +32,8 @@
         <typeAlias type="cs6400.struct.company.MovieCompanyRelated" alias="movie_company" />
         <typeAlias type="cs6400.struct.company.CastCompanyRelated" alias="cast_company" />
         <typeAlias type="cs6400.struct.company.CompanyCompanyRelated" alias="company_company"/>
+        <typeAlias type="cs6400.struct.genre.genre" alias="genre"/>
+        <typeAlias type="cs6400.struct.genre.HistogramElement" alias="histogram"/>
     </typeAliases>
 
     <environments default="development">

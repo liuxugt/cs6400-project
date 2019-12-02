@@ -1,6 +1,8 @@
 package cs6400.database;
 
 import cs6400.struct.company.*;
+import cs6400.struct.genre.HistogramElement;
+import cs6400.struct.genre.genre;
 import cs6400.struct.movie.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -105,6 +107,16 @@ public class DataManager {
         }
     }
 
+    public List<MovieMovieRelated> getSimilarMovieWithCrewCast(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getSimilarMovieWithCrewCast(id);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
     //Start the company API queries
     public Company getCompanyByName(String name){
         SqlSession sqlSession = factory.openSession();
@@ -160,7 +172,7 @@ public class DataManager {
         }
     }
 
-    public List<CompanyCompanyRelated> getCompanyRelatedToCompany(int id){
+    public List<CompanyCompanyRelated> getSimilarCompany(int id){
         SqlSession sqlSession = factory.openSession();
         try{
             Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -201,4 +213,44 @@ public class DataManager {
             sqlSession.close();
         }
     }
+
+    public List<HistogramElement> getHistogramByYear(int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getHistogramByYear(id);
+        } finally{
+            sqlSession.close();
+        }
+    }
+    public List<HistogramElement> getHistogramByDirectorOnMovie(int movie_id, int id){
+
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getHistogramByDirectorOnMovie(movie_id, id);
+        } finally{
+            sqlSession.close();
+        }
+    }
+    public List<HistogramElement> getHistogramByDirectorOnCompany(int company_id, int id){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getHistogramByDirectorOnCompany(company_id, id);
+        } finally{
+            sqlSession.close();
+        }
+    }
+
+    public genre getGenre(String name){
+        SqlSession sqlSession = factory.openSession();
+        try{
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            return mapper.getGenre(name);
+        } finally{
+            sqlSession.close();
+        }
+    }
+
 }
