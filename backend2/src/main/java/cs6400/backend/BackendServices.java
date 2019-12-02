@@ -65,17 +65,16 @@ public class BackendServices {
             }
         }
         List<MovieMovieRelated> similarMovie = dataManager.getSimilarMovie(id, capacity - response.getMovieSize());
+
+        int year = Integer.parseInt(basic_info.getRelease_date().split("-")[0]);
         for(int i  =0; i < similarMovie.size(); i++){
             similarMovie.get(i).setReason(sample_reason_movie[1]);
+            int year1 = Integer.parseInt(similarMovie.get(i).getRelease_date().split("-")[0]);
+            similarMovie.get(i).setOrder_rating(similarMovie.get(i).getOrder_rating() - Math.abs(year1 - year) * 0.05);
         }
 
         Collections.sort(similarMovie, new Comparator<MovieMovieRelated>(){
             public int compare(MovieMovieRelated a1, MovieMovieRelated a2){
-                int year = Integer.parseInt(basic_info.getRelease_date().split("-")[0]);
-                int year1 = Integer.parseInt(a1.getRelease_date().split("-")[0]);
-                int year2 = Integer.parseInt(a2.getRelease_date().split("-")[0]);
-                a1.setOrder_rating(a1.getOrder_rating() - Math.abs(year1 - year) * 0.05);
-                a2.setOrder_rating(a2.getOrder_rating() - Math.abs(year2 - year) * 0.05);
                 double order = a2.getOrder_rating() - a1.getOrder_rating();
                 if( order > 0){
                     return 1;
@@ -133,17 +132,14 @@ public class BackendServices {
         return response;
     }
 
-    public List<HistogramElement> getHistogramByYear(String name){
-        genre temp = dataManager.getGenre(name);
-        return dataManager.getHistogramByYear(temp.getId());
+    public List<HistogramElement> getHistogramByYear(int id){
+        return dataManager.getHistogramByYear(id);
     }
-    public List<HistogramElement> getHistogramByDirectorOnCompany(String name, int company_id){
-        genre temp = dataManager.getGenre(name);
-        return dataManager.getHistogramByDirectorOnCompany(company_id, temp.getId());
+    public List<HistogramElement> getHistogramByDirectorOnCompany(int id, int company_id){
+        return dataManager.getHistogramByDirectorOnCompany(company_id, id);
     }
 
-    public List<HistogramElement> getHistogramByDirectorOnMovie(String name, int movie_id){
-        genre temp = dataManager.getGenre(name);
-        return dataManager.getHistogramByDirectorOnMovie(movie_id, temp.getId());
+    public List<HistogramElement> getHistogramByDirectorOnMovie(int id, int movie_id){
+        return dataManager.getHistogramByDirectorOnMovie(movie_id, id);
     }
 }

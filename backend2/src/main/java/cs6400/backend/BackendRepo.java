@@ -39,14 +39,14 @@ public class BackendRepo {
         return services.getCompanyResponseByName(name);
     }
 
-    public List<HistogramElement> getHistogram(String genre_name, int id, int content_id){
+    public List<HistogramElement> getHistogram(int genre_id, int id, int content_id){
         switch(content_id){
             case 0:
-                return services.getHistogramByYear(genre_name);
+                return services.getHistogramByYear(genre_id);
             case 1:
-                return services.getHistogramByDirectorOnMovie(genre_name, id);
+                return services.getHistogramByDirectorOnMovie(genre_id, id);
             case 2:
-                return services.getHistogramByDirectorOnCompany(genre_name, id);
+                return services.getHistogramByDirectorOnCompany(genre_id, id);
             default:
                 return null;
         }
