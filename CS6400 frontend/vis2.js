@@ -1,6 +1,8 @@
 // vis 1
-function bar_chart(xdata,ydata){
 
+
+function bar_chart(xdata,ydata){
+d3.selectAll("#director-chart>*").remove();
 var width=960
 var height=600
 var marge = {top:60,bottom:60,left:60,right:60}
