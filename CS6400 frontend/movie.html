@@ -121,9 +121,44 @@
     <script type="text/javascript" src="js/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src = "get_item.js"></script>
     <script type="text/javascript">
+    function buildGenre(){
+        res = {}
+        for(let item in all_data_movie['genres']){
+            res[item] = all_data_movie['genres'][item]['id'];
+        }
+        return res;
+    }
+    
+    //vis 0 only
+    function draw_chart(movie_id, genre_index){
+        $.ajax({
+               url: "http://localhost:8080/api/movie/"+movie_id+"/0/genre/"+genreid[genre_index],
+               type: "GET",
+               crossDomain: true,
+               error: function(xhr, err){
+               alert('search failed')},
+               success: function (data) {
+               var movie_count=[];
+               var year=[];
+               for(var i=0;i<data.length;++i)
+               {
+               movie_count.push(data[i]["rating"]);
+               year.push(data[i]["split_element"]);
+               }
+               //draw_line_chart(movie_count,year);
+               localStorage.setItem("movie_count", JSON.stringify(movie_count));
+               localStorage.setItem("year", JSON.stringify(year));
+               window.location.href='D3-template.html';
+               }
+               })
+    }
+
       all_data_movie = JSON.parse(localStorage.getItem("movie_data"));
       console.log(all_data_movie);
       console.log(all_data_movie['title']);
+      var movieid = all_data_movie['id'];
+      var genreid = buildGenre();
+      
       document.getElementById('movie_title').innerHTML=movie_title();
       document.getElementById('movie_language').innerHTML=movie_language();
       document.getElementById('movie_average_rating').innerHTML=movie_average_rating();
