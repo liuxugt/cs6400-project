@@ -120,6 +120,8 @@
     <script type="text/javascript" src="js/d3/d3.min.js"></script>
     <script type="text/javascript" src="js/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src = "get_item.js"></script>
+<!--     <script type="text/javascript" src = "vis2.js"></script>
+    <script type="text/javascript" src = "vis1.js"></script> -->
     <script type="text/javascript">
     function buildGenre(){
         res = {}
@@ -148,6 +150,25 @@
                //draw_line_chart(movie_count,year);
                localStorage.setItem("movie_count", JSON.stringify(movie_count));
                localStorage.setItem("year", JSON.stringify(year));
+               }
+               })
+        $.ajax({
+               url: "http://localhost:8080/api/movie/"+movie_id+"/1/genre/"+genreid[genre_index],
+               type: "GET",
+               crossDomain: true,
+               error: function(xhr, err){
+               alert('search failed')},
+               success: function (data) {
+               var movie_count=[];
+               var director=[];
+               for(var i=0;i<data.length;++i)
+               {
+               movie_count.push(data[i]["rating"]);
+               director.push(data[i]["split_element"]);
+               }
+               //draw_line_chart(movie_count,year);
+               localStorage.setItem("movie_count_2", JSON.stringify(movie_count));
+               localStorage.setItem("director", JSON.stringify(director));
                window.location.href='D3-template.html';
                }
                })
@@ -175,10 +196,7 @@
       document.getElementById('returnbutton2').onclick = function(){
         window.location.href='index.html';
       }
-      // function js(num){
-      //   alert(num);
-      //   window.location.href='index.html';
-      // }
+      
     </script>
 
   </body>

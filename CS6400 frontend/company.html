@@ -91,8 +91,66 @@
     <script type="text/javascript" src="js/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src = "get_item.js"></script>
     <script type="text/javascript">
-        all_data_movie = JSON.parse(localStorage.getItem("company_data"));
-        console.log(all_data_movie);
+        // all_data_movie = JSON.parse(localStorage.getItem("company_data"));
+        // console.log(all_data_movie);
+function buildGenre_c(){
+        res = {}
+        for(let item in all_data_movie['genres']){
+            res[item] = all_data_movie['genres'][item]['id'];
+        }
+        return res;
+    }
+    
+    //vis 0 only
+    function draw_chart_c(company_id, genre_index){
+        $.ajax({
+               url: "http://localhost:8080/api/company/"+company_id+"/0/genre/"+genreid[genre_index],
+               type: "GET",
+               crossDomain: true,
+               error: function(xhr, err){
+               alert('search failed')},
+               success: function (data) {
+               var movie_count=[];
+               var year=[];
+               for(var i=0;i<data.length;++i)
+               {
+               movie_count.push(data[i]["rating"]);
+               year.push(data[i]["split_element"]);
+               }
+               //draw_line_chart(movie_count,year);
+               localStorage.setItem("movie_count", JSON.stringify(movie_count));
+               localStorage.setItem("year", JSON.stringify(year));
+               }
+               })
+        $.ajax({
+               url: "http://localhost:8080/api/company/"+company_id+"/1/genre/"+genreid[genre_index],
+               type: "GET",
+               crossDomain: true,
+               error: function(xhr, err){
+               alert('search failed')},
+               success: function (data) {
+               var movie_count=[];
+               var director=[];
+               for(var i=0;i<data.length;++i)
+               {
+               movie_count.push(data[i]["rating"]);
+               director.push(data[i]["split_element"]);
+               }
+               //draw_line_chart(movie_count,year);
+               localStorage.setItem("movie_count_2", JSON.stringify(movie_count));
+               localStorage.setItem("director", JSON.stringify(director));
+               window.location.href='D3-template.html';
+               }
+               })
+    }
+
+      all_data_movie = JSON.parse(localStorage.getItem("company_data"));
+      console.log(all_data_movie);
+      console.log(all_data_movie['name']);
+      var companyid = all_data_movie['id'];
+      var genreid = buildGenre_c();
+
+
       document.getElementById('comp_name').innerHTML=comp_name();
       document.getElementById('comp_revenue').innerHTML=comp_revenue();
       document.getElementById('comp_movie_count').innerHTML=comp_movie_count();

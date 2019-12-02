@@ -353,21 +353,22 @@
         WHERE mgr.genre_id = #{id} and substring_index(movies.release_date, "-", 1) >= 2010
         GROUP BY participate.bool, split_element, c1.id
         ORDER BY rating DESC
-        LIMIT 20
+        LIMIT 10
     </select>
     <select id="getHistogramByDirectorOnCompany" resultMap="histogramMap">
-        select SUM(movies.popularity) + ifnull(participate.bool, 0) * 200 AS rating, c1.name AS split_element, AVG(vote_average) AS average_rating from crews
+        select SUM(movies.popularity) + ifnull(participate.bool, 0) * 200 AS rating, c1.name AS split_element, AVG(vote_average) AS average_rating from crews AS c1
         JOIN movie_crew_relation AS mcr ON mcr.crew_id = c1.id AND mcr.job = "Director"
         JOIN movies ON mcr.movie_id = movies.id
+        JOIN movie_genre_relation AS mgr ON mgr.movie_id = movies.id
         LEFT JOIN(
             SELECT count(*) AS bool, movie_crew_relation.crew_id AS crew_id FROM movie_crew_relation
             JOIN movie_company_relation ON movie_crew_relation.movie_id = movie_company_relation.movie_id
-            WHERE movie_company_relation = #{company_id} AND job = "Director" GROUP
+            WHERE movie_company_relation.company_id = #{company_id} AND job = "Director" GROUP BY movie_crew_relation.crew_id
         ) AS participate ON participate.crew_id = c1.id
         WHERE mgr.genre_id = #{id} and substring_index(movies.release_date, "-", 1) >= 2010
         GROUP BY participate.bool, split_element, c1.id
         ORDER BY rating DESC
-        LIMIT 20
+        LIMIT 10
     </select>
 
     <select id="getGenre" resultMap="genreMap">
