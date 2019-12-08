@@ -5,7 +5,7 @@ d3.selectAll("#visualization>*").remove();
   var svg = d3.select('#visualization')
     .append('svg')
     .attr('width', 600)
-    .attr('height', 6000);
+    .attr('height', 600);
     //.style("background-color","rgb(142, 137, 137)");
   var margin=[100,100,100,100]
 
